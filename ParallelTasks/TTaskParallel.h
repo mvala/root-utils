@@ -13,8 +13,6 @@
 #include <TTask.h>
 #include <Rtypes.h>
 
-class TThread;
-
 class TTaskParallel : public TTask {
 public:
    TTaskParallel(const char *name = "Task", const char *title = "Task");
@@ -24,11 +22,7 @@ public:
 
    virtual void Exec(Option_t *option);
 
-   TThread *GetThread() { return fThread; }
-   static void *Thread0(void *arg);
-
 private:
-   TThread *fThread;
 
    ClassDef(TTaskParallel, 1)
 

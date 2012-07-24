@@ -7,6 +7,7 @@
 //          Martin Vala (martin.vala@cern.ch)
 //
 
+#include <TRandom.h>
 #include <TThread.h>
 #include "TTaskParallel.h"
 
@@ -14,67 +15,55 @@ ClassImp(TTaskParallel)
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const char *name, const char *title) :
-   TTask(name, title),
-   fThread(0)
-{
-   //
-   // Std constructor
-   //
+		TTask(name, title) {
+	//
+	// Std constructor
+	//
 }
 
 //_________________________________________________________________________________________________
-TTaskParallel::~TTaskParallel()
-{
-   //
-   // Destructor
-   //
+TTaskParallel::~TTaskParallel() {
+	//
+	// Destructor
+	//
 }
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const TTaskParallel &obj) :
-   TTask(obj),
-   fThread(obj.fThread)
+		TTask(obj)
 
 {
-   //
-   // Copy constructor
-   //
+	//
+	// Copy constructor
+	//
 }
 
 //_________________________________________________________________________________________________
-TTaskParallel &TTaskParallel::operator=(const TTaskParallel &obj )
-{
-   //
-   // Assigned operator
-   //
+TTaskParallel &TTaskParallel::operator=(const TTaskParallel &obj) {
+	//
+	// Assigned operator
+	//
 
-   if (&obj != this) {
-      TTask::operator=(obj);
-      fThread = obj.fThread;
-   }
-   return *this;
-
-}
-
-//_________________________________________________________________________________________________
-void TTaskParallel::Exec(Option_t *option)
-{
-   //
-   // Exec of manager task
-   //
-
-   TTask::Exec(option);
+	if (&obj != this) {
+		TTask::operator=(obj);
+	}
+	return *this;
 
 }
 
 //_________________________________________________________________________________________________
-void *TTaskParallel::Thread0(void *arg)
-{
-   TTaskParallel *task = (TTaskParallel *)arg;
-   if (task) {
-      if (task->IsActive())  {
-         task->Exec(task->GetOption());
-      }
-   }
-   return 0;
+void TTaskParallel::Exec(Option_t *option) {
+	//
+	// Exec of manager task
+	//
+
+//   TTask::Exec(option);
+	TString n(GetName());
+
+	TRandom r(n.Atof());
+	Double_t time = 10000*r.Uniform(1);
+	Printf("[%s] %s (%f)", option,GetName(),time);
+
+	gSystem->Sleep(time);
+
 }

@@ -1,5 +1,6 @@
 
 set(SRCS
+TTaskThread.cxx
 TTaskParallel.cxx
 TTaskManager.cxx
 TMyTaskTest.cxx
