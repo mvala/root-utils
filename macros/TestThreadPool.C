@@ -4,8 +4,8 @@
 #include <TTaskParallel.h>
 #include <TThreadPool.h>
 #include <TTaskThread.h>
-
 #endif
+
 void TestThreadPool(Bool_t needDbg=kFALSE) {
 
 	size_t numThreads = 5;
@@ -18,7 +18,8 @@ void TestThreadPool(Bool_t needDbg=kFALSE) {
    vector <TTaskParallel> myTaskList(numTasks*2);
 
    for (size_t i = 0;i < numTasks; ++i) {
-   	myTaskList[i].SetName(TString::Format("%ld",i).Data());
+   	myTaskList[i].SetName(TString::Format("Task%ld",i).Data());
+   	myTaskList[i].SetTitle(TString::Format("%ld",i).Data());
    	threadPool.PushTask(taskList,&myTaskList[i]);
    }
 
@@ -26,7 +27,8 @@ void TestThreadPool(Bool_t needDbg=kFALSE) {
 //   threadPool.Stop(true);
 
    for (size_t i = 0;i < numTasks; ++i) {
-   	myTaskList[i+numTasks].SetName(TString::Format("%ld",i+numTasks).Data());
+   	myTaskList[i+numTasks].SetName(TString::Format("Task%ld",i+numTasks).Data());
+   	myTaskList[i+numTasks].SetTitle(TString::Format("%ld",i+numTasks).Data());
    	threadPool.PushTask(taskList,&myTaskList[i+numTasks]);
    }
 

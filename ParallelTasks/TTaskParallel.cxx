@@ -57,12 +57,12 @@ void TTaskParallel::Exec(Option_t *option) {
 	// Exec of manager task
 	//
 
-//   TTask::Exec(option);
-	TString n(GetName());
-
-	TRandom r(n.Atof());
-	Double_t time = 10000*r.Uniform(1);
-	Printf("[%s] %s (%f)", option,GetName(),time);
+	TString n(GetTitle());
+	UInt_t seed = 0;
+	if (!n.IsNull()) seed =  n.Atoll();
+	TRandom r(seed);
+	UInt_t time = (UInt_t)10000*r.Uniform(1);
+	Printf("[%s] %s (%ld)", option,GetName(),time);
 
 	gSystem->Sleep(time);
 
