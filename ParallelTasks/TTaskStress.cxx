@@ -18,18 +18,14 @@ ClassImp(TTaskStress)
 
 //_________________________________________________________________________________________________
 TTaskStress::TTaskStress(const char *name, const char *title) :
-TTaskParallel(name, title),
-fType(kSleep),
-fMaxNum(1)
-{
+		TTaskParallel(name, title), fType(kSleep), fMaxNum(1) {
 	//
 	// Std constructor
 	//
 }
 
 //_________________________________________________________________________________________________
-TTaskStress::~TTaskStress()
-{
+TTaskStress::~TTaskStress() {
 	//
 	// Destructor
 	//
@@ -37,9 +33,7 @@ TTaskStress::~TTaskStress()
 
 //_________________________________________________________________________________________________
 TTaskStress::TTaskStress(const TTaskStress &obj) :
-   												TTaskParallel(obj),
-   												fType(obj.fType),
-   												fMaxNum(obj.fMaxNum)
+		TTaskParallel(obj), fType(obj.fType), fMaxNum(obj.fMaxNum)
 
 {
 	//
@@ -48,8 +42,7 @@ TTaskStress::TTaskStress(const TTaskStress &obj) :
 }
 
 //_________________________________________________________________________________________________
-TTaskStress &TTaskStress::operator=(const TTaskStress &obj )
-{
+TTaskStress &TTaskStress::operator=(const TTaskStress &obj) {
 	//
 	// Assigned operator
 	//
@@ -65,8 +58,7 @@ TTaskStress &TTaskStress::operator=(const TTaskStress &obj )
 }
 
 //_________________________________________________________________________________________________
-void TTaskStress::Exec(Option_t *option)
-{
+void TTaskStress::Exec(Option_t *option) {
 	//
 	// Exec of manager task
 	//
@@ -76,24 +68,24 @@ void TTaskStress::Exec(Option_t *option)
 
 	TString n(GetTitle());
 	UInt_t seed = 0;
-	if (!n.IsNull()) seed =  n.Atoll();
+	if (!n.IsNull()) seed = n.Atoll();
 	TRandom r(seed);
 
 	if (fType == kSleep) {
-		UInt_t time = (UInt_t)r.Uniform(10000);
-		Printf("[%s]S %s (%ld)", option,GetName(),time);
+		UInt_t time = (UInt_t) r.Uniform(10000);
+		Printf("[%s] %s S (%ld)", option, GetName(), time);
 		gSystem->Sleep(time);
-		Printf("[%s]D %s (%ld)", option,GetName(),time);
+		Printf("[%s] %s D (%ld)", option, GetName(), time);
 	} else if (fType == kCpu) {
-		TH1D h(TString::Format("myTaskStress_%s",GetName()).Data(),"My Stress task hist",100,-10,10);
+		TH1D h(TString::Format("myTaskStress_%s", GetName()).Data(), "My Stress task hist", 100, -10, 10);
 		h.SetDirectory(0);
-		UInt_t entries = (UInt_t)r.Uniform(1e9);
-		Printf("[%s]S %s %.2f", option,GetName(),(Double_t)entries/1e6);
-		h.FillRandom("gaus",entries);
-		Printf("[%s]D %s %.2f", option,GetName(),(Double_t)entries/1e6);
+		UInt_t entries = (UInt_t) r.Uniform(1e9);
+//		Printf("[%s]S %s %.2f", option, GetName(), (Double_t) entries / 1e6);
+		h.FillRandom("gaus", entries);
+//		Printf("[%s]D %s %.2f", option, GetName(), (Double_t) entries / 1e6);
 	}
 	timer.Stop();
-	timer.Print();
+//	timer.Print();
 
 	//
 	//   Int_t base=1e8*fMaxNum;

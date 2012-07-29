@@ -10,5 +10,6 @@
 #pragma link C++ class TTaskManager+;
 
 #pragma link C++ class TTaskStress+;
+#pragma link C++ class TTaskMonitor+;
 
 #endif

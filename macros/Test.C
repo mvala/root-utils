@@ -6,6 +6,7 @@
 void Test(Bool_t runParallel = kTRUE) {
 
    gSystem->Load("libThread.so");
+   gSystem->Load("libGui.so");
    gSystem->Load("libParallelTasks.so");
 
    gSystem->AddIncludePath("-I/home/mvala/git/root-utils/ParallelTasks/");

@@ -13,5 +13,5 @@ export LD_LIBRARY_PATH="$PROJECT_DIR/lib:$LD_LIBRARY_PATH"
 
 MY_PWD=`pwd`
 cd $PROJECT_DIR/macros/
-root -l -q Test.C\($MY_PARALLEL\)
+root -l Test.C\($MY_PARALLEL\)
 cd $MY_PWD

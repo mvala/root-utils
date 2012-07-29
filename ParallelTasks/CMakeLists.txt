@@ -4,6 +4,7 @@ TTaskThread.cxx
 TTaskParallel.cxx
 TTaskManager.cxx
 TTaskStress.cxx
+TTaskMonitor.cxx
 )
 
 set(INCLUDE_DIRECTORIES
