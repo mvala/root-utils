@@ -3,7 +3,7 @@
 PROJECT_DIR="$(dirname $(dirname $(readlink -m $0)))"
 
 # Build
-$PROJECT_DIR/scripts/make.sh install
+$PROJECT_DIR/scripts/make.sh install || exit $?
 
 MY_PARALLEL=1
 if [ -n "$1" ];then

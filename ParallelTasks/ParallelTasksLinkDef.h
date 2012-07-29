@@ -4,9 +4,11 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ class TTaskThread+;
+
 #pragma link C++ class TTaskParallel+;
 #pragma link C++ class TTaskManager+;
 
-#pragma link C++ class TMyTaskTest+;
+#pragma link C++ class TTaskStress+;
 
 #endif

@@ -8,14 +8,17 @@
 //
 
 #include <TRandom.h>
-#include <TThread.h>
+//#include <TThread.h>
 #include "TTaskParallel.h"
+
+TTaskThread *TTaskParallel::fgThreadTask = 0;
+TThreadPool<TTaskThread, TTask*> *TTaskParallel::fgThreadPool = 0;
 
 ClassImp(TTaskParallel)
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const char *name, const char *title) :
-		TTask(name, title) {
+		TTask(name, title),fParent(0), fNumOfThreads(1) {
 	//
 	// Std constructor
 	//
@@ -26,11 +29,15 @@ TTaskParallel::~TTaskParallel() {
 	//
 	// Destructor
 	//
+
+	// TODO is it enough
+//	delete fgThreadPool;
+//	delete fgThreadTask;
 }
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const TTaskParallel &obj) :
-		TTask(obj)
+		TTask(obj),fParent(obj.fParent), fNumOfThreads(obj.fNumOfThreads)
 
 {
 	//
@@ -46,9 +53,25 @@ TTaskParallel &TTaskParallel::operator=(const TTaskParallel &obj) {
 
 	if (&obj != this) {
 		TTask::operator=(obj);
+		fParent = obj.fParent;
+		fNumOfThreads = obj.fNumOfThreads;
 	}
 	return *this;
 
+}
+
+//_________________________________________________________________________________________________
+void TTaskParallel::Add(TTask *task) {
+	//
+	// Adds task
+	//
+
+	if (!task) return;
+
+//   Printf("Adding Task %s (parent=%s)",task->GetName(),GetName());
+   fTasks->Add(task);
+   TTaskParallel *tp = (TTaskParallel *)task;
+   tp->SetParent(this);
 }
 
 //_________________________________________________________________________________________________
@@ -57,13 +80,12 @@ void TTaskParallel::Exec(Option_t *option) {
 	// Exec of manager task
 	//
 
-	TString n(GetTitle());
-	UInt_t seed = 0;
-	if (!n.IsNull()) seed =  n.Atoll();
-	TRandom r(seed);
-	UInt_t time = (UInt_t)10000*r.Uniform(1);
-	Printf("[%s] %s (%ld)", option,GetName(),time);
 
-	gSystem->Sleep(time);
+
+	Printf("%s [START] [%ld] %p", GetName(), fNumOfThreads,fgThreadPool);
+
+//	ExecuteTasks(option);
+
+	Printf("%s [ DONE] [%ld]", GetName(), fNumOfThreads);
 
 }

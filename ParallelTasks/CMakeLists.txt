@@ -3,7 +3,7 @@ set(SRCS
 TTaskThread.cxx
 TTaskParallel.cxx
 TTaskManager.cxx
-TMyTaskTest.cxx
+TTaskStress.cxx
 )
 
 set(INCLUDE_DIRECTORIES

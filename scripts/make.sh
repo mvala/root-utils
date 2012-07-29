@@ -18,6 +18,6 @@ CMD="nice -n 15"
 
 CMD="$CMD make $*"
 
-$CMD
+$CMD || exit $?
 
 cd $MY_PWD

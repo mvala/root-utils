@@ -8,9 +8,8 @@
 #ifndef ROOT_TTaskThread
 #define ROOT_TTaskThread
 
+#include <TTask.h>
 #include <TThreadPool.h>
-
-#include "TTaskParallel.h"
 
 class TTaskThread : public TThreadPoolTaskImp<TTaskThread, TTask*> {
 public:
