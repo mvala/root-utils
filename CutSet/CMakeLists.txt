@@ -2,6 +2,7 @@
 set(SRCS
 TCutObj.cxx
 TCutSet.cxx
+TCutSimple.cxx
 )
 
 set(INCLUDE_DIRECTORIES

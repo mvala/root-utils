@@ -7,4 +7,6 @@
 #pragma link C++ class TCutObj+;
 #pragma link C++ class TCutSet+;
 
+#pragma link C++ class TCutSimple+;
+
 #endif

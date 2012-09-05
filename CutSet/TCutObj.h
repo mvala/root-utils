@@ -10,13 +10,15 @@
 #ifndef ROOT_TCutObj
 #define ROOT_TCutObj
 
-#include "TCut.h"
+#include <TCut.h>
 
 class TCutObj : public TCut {
 
 public:
-   TCutObj(const char *name = "Task", const char *title = "Task");
+   TCutObj(const char *name = "cut", const char *title = "Cut Title");
    virtual ~TCutObj();
+
+   virtual Bool_t IsSelected(TObject*obj) { return kTRUE; }
 private:
    ClassDef(TCutObj, 1)
 };
