@@ -92,10 +92,10 @@ Bool_t TCutSet::IsSelected(TObject*obj) {
    TCutObj *cut;
    for (Int_t i=0;i<fCuts->GetEntries();i++) {
       cut = (TCutObj*)fCuts->At(i);
-      Printf("%s=%d",cut->GetName(),cut->IsSelected(obj));
+//      Printf("%s=%d",cut->GetName(),cut->IsSelected(obj));
       fFormula->SetParameter(i,cut->IsSelected(obj));
    }
 
-   Printf("fFormula : %s",fFormula->GetExpFormula("p").Data());
+//   Printf("fFormula : %s",fFormula->GetExpFormula("p").Data());
    return fFormula->Eval(0);
 }
