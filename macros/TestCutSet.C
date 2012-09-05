@@ -21,7 +21,7 @@ void TestCutSet() {
   cs.Print();
   
 //  TFormula *f = cs.GetFormula();
-  Printf("MyFormula1 : %d",(Bool_t)cs.IsSelected(mySimpleObj));
+  Printf("Result : %d",(Bool_t)cs.IsSelected(mySimpleObj));
 //  Printf("MyFormula1 : %d",(Bool_t)cs.IsSelected(new TObject()));
 
 }
