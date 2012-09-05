@@ -9,7 +9,8 @@ void TestCutSet() {
   TCutSimple c1("c1","");
 //  TCutSimple c2("c2","");
 
-  TNamed *mySimpleObj = new TNamed("myObj","My1");
+  TNamed *mySimpleObj = new TNamed("myObj","0");
+//  TNamed *mySimpleObj = new TNamed("myObj","1");
 
 //  cs.AddCut(&c1);
 //  cs.AddCut(&c2);
