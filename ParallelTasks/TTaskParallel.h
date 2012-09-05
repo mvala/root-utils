@@ -49,7 +49,6 @@ protected:
 	ETaskStatusType fTaskStatusType;
 	ETaskType fTaskType;
 
-
 	TTask	*fParent;
 	static TTaskThread *fgThreadTask;   // thread wrapper for TThreadPool
 	static TThreadPool<TTaskThread, TTask*> *fgThreadPool;   // thread pool

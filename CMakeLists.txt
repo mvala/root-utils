@@ -6,7 +6,7 @@ find_package(Threads REQUIRED)
 find_package(ROOT REQUIRED)
 
 add_subdirectory(ParallelTasks)
-
+add_subdirectory(CutSet)
 include(CPack)
 
 # uninstall
