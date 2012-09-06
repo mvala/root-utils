@@ -10,27 +10,30 @@ void TestCutSet() {
    //  TCutSimple c2("c2","");
 
    TNamed *mySimpleObj = new TNamed("myObj","0");
-   //  TNamed *mySimpleObj = new TNamed("myObj","1");
+//     TNamed *mySimpleObj = new TNamed("myObj","1");
 
    //  cs.AddCut(&c1);
    //  cs.AddCut(&c2);
    cs.AddCut(c1);
    cs.AddCut(c2);
 
-   cs = c1&&c2;
+//   cs = c1&&c2;
+//   cs = c1&&c2&&c1;
+   cs = (c1&&c2)||(!c1&&!c2);
 
-   cs.Print();
+//   cs.Print();
 
    //  TFormula *f = cs.GetFormula();
    TStopwatch timer;
    timer.Start();
-   Bool_t ret;
+   Bool_t ret = kTRUE;
    for (Int_t i=0;i<1e7;i++){
       cs.IsSelected(mySimpleObj);
-//      ret = 1&1;
+//      ret = (1&1)||(!1&!1);
+      //      ret = 1&1&0;
    }
    Printf("Result : %d",(Bool_t)cs.IsSelected(mySimpleObj));
-   Printf("Result : %d",ret);
+//   Printf("Result : %d",ret);
    timer.Stop();
    timer.Print();
 

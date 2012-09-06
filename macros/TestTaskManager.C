@@ -18,8 +18,8 @@ void TestTaskManager() {
    taskMgr->Add(taskMon);
 
    const Int_t numTasks = 10;
-   Int_t types[numTasks] = {0,0,1,1,1,1,0,1,0,1};
-// Int_t types[numTasks] = {0,0,0,0,0,0,0,0,0,0};
+//   Int_t types[numTasks] = {0,0,1,1,1,1,0,1,0,1};
+ Int_t types[numTasks] = {0,0,0,0,0,0,0,0,0,0};
 
    TTaskStress *task=0;
    for (Int_t i = 0; i < numTasks; i++) {

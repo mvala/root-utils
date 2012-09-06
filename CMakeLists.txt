@@ -5,8 +5,14 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(Threads REQUIRED)
 find_package(ROOT REQUIRED)
 
+include(root-utils)
+
+add_custom_target(par-all)
+
 add_subdirectory(ParallelTasks)
 add_subdirectory(CutSet)
+add_subdirectory(PeacUtils)
+
 include(CPack)
 
 # uninstall

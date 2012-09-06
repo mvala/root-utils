@@ -15,9 +15,11 @@ if [ ! -f Makefile ];then
 fi
 
 CMD="nice -n 15"
-
 CMD="$CMD make $*"
+$CMD || exit $?
 
+CMD="nice -n 15"
+CMD="$CMD make par-all"
 $CMD || exit $?
 
 cd $MY_PWD

@@ -1,7 +1,7 @@
 
 include Makefile.arch
 
-PACKAGE = CutSet
+PACKAGE = PeacUtils
 
 default-target: lib$(PACKAGE).so
 
@@ -20,8 +20,8 @@ endif
 
 CXXFLAGS += $(ALICEINC) -g
 
-SRCS = TCutObj.cxx TCutSet.cxx TCutSimple.cxx
-HDRS = TCutObj.h TCutSet.h TCutSimple.h
+SRCS = TPeacVerifierSel.cxx
+HDRS = TPeacVerifierSel.h
 DHDR = $(PACKAGE)LinkDef.h
 
 DHDR_MY := $(DHDR)
