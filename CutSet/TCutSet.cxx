@@ -8,7 +8,8 @@
 //
 
 #include <TFormula.h>
-#include <TObjArray.h>
+#include <TList.h>
+
 #include "TCutObj.h"
 
 #include "TCutSet.h"
@@ -64,7 +65,7 @@ void TCutSet::AddCut(TCutObj *cut) {
    if (!cut) return;
 
    // creates array of cuts when not done yet
-   if (!fCuts) fCuts = new TObjArray();
+   if (!fCuts) fCuts = new TList();
 
    // sets title to parameter id
    cut->SetTitle(TString::Format("[%d]",fCuts->GetEntries()).Data());
@@ -77,7 +78,7 @@ void TCutSet::AddCut(TCutObj *cut) {
 void TCutSet::AddCut(TCutObj &cut) {
 
    // creates array of cuts when not done yet
-   if (!fCuts) fCuts = new TObjArray();
+   if (!fCuts) fCuts = new TList();
 
    // sets title to parameter id
    cut.SetTitle(TString::Format("[%d]",fCuts->GetEntries()).Data());

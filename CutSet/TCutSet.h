@@ -13,7 +13,7 @@
 #include "TCutObj.h"
 
 class TFormula;
-class TObjArray;
+class TList;
 class TCutObj;
 class TCutSet : public TCutObj {
 
@@ -33,7 +33,7 @@ public:
 
 private:
 
-   TObjArray    *fCuts;    // list of cuts
+   TList        *fCuts;    // list of cuts
    TFormula     *fFormula; // common formula
 
    ClassDef(TCutSet, 1)
