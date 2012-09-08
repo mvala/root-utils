@@ -30,7 +30,7 @@ private:
 
    Int_t                             fNumThreads; // number of threads
    TTaskThread                      *fThreadTask; // thread wrapper for TThreadPool
-   TThreadPool<TTaskThread, TTask*> *fThreadPool; // thread pool
+   TThreadPool<TTaskThread, TTask *> *fThreadPool; // thread pool
 
    ClassDef(TTaskPoolManager, 1)
 

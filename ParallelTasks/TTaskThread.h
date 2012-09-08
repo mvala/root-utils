@@ -11,13 +11,13 @@
 #include <TTask.h>
 #include <TThreadPool.h>
 
-class TTaskThread : public TThreadPoolTaskImp<TTaskThread, TTask*> {
+class TTaskThread : public TThreadPoolTaskImp<TTaskThread, TTask *> {
 public:
-	bool runTask(TTask *task);
-	ULong_t ThreadID() const ;
+   bool runTask(TTask *task);
+   ULong_t ThreadID() const ;
 
 private:
-	ULong_t fThreadID;
+   ULong_t fThreadID;
 };
 
 #endif /* TTASKTHREAD_H_ */

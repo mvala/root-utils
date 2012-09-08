@@ -31,14 +31,17 @@ void TestTaskManagerSimple() {
 
    task2 = new TTaskStress("task310", "4");
    task2->SetStressType(stressType);
+   task2->AddDependency(task1);
    task1->Add(task2);
 
    task2 = new TTaskStress("task320", "5");
    task2->SetStressType(stressType);
+   task2->AddDependency(task1);
    task1->Add(task2);
 
    task2 = new TTaskStress("task330", "6");
    task2->SetStressType(stressType);
+   task2->AddDependency(task1);
    task1->Add(task2);
 
    taskMgr->Add(task1);
@@ -49,16 +52,19 @@ void TestTaskManagerSimple() {
    task2 = new TTaskStress("task410", "11");
    task2->SetStressType(stressType2);
    task2->SetType(TTaskParallel::kIO);
+   task2->AddDependency(task1);
    task1->Add(task2);
 
    task2 = new TTaskStress("task420", "12");
    task2->SetStressType(stressType2);
    task2->SetType(TTaskParallel::kIO);
+   task2->AddDependency(task1);
    task1->Add(task2);
 
    task2 = new TTaskStress("task430", "13");
    task2->SetStressType(stressType2);
    task2->SetType(TTaskParallel::kIO);
+   task2->AddDependency(task1);
    task1->Add(task2);
 
    taskMgr->Add(task1);

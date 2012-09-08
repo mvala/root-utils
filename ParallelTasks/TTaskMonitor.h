@@ -19,26 +19,26 @@
 class TH1I;
 class TTaskMonitor : public TTaskParallel {
 
-	RQ_OBJECT("TTaskMonitor")
+   RQ_OBJECT("TTaskMonitor")
 
 public:
-	TTaskMonitor(const char *name = "Task", const char *title = "Task");
-	virtual ~TTaskMonitor();
+   TTaskMonitor(const char *name = "Task", const char *title = "Task");
+   virtual ~TTaskMonitor();
 
-	virtual void Exec(Option_t *option);
+   virtual void Exec(Option_t *option);
 
-	void ShowWindow(const TGWindow *p,UInt_t w, UInt_t h);
+   void ShowWindow(const TGWindow *p,UInt_t w, UInt_t h);
 
-	void RefreshMonitorInfo();
-	void StopMonitoring();
+   void RefreshMonitorInfo();
+   void StopMonitoring();
 
 private:
-	TGMainFrame *fMain;
-	TRootEmbeddedCanvas *fEcanvas;
-	TH1I *fHist;
-	Bool_t fIsUp;
+   TGMainFrame *fMain;
+   TRootEmbeddedCanvas *fEcanvas;
+   TH1I *fHist;
+   Bool_t fIsUp;
 
-	ClassDef(TTaskMonitor, 1)
+   ClassDef(TTaskMonitor, 1)
 };
 
 #endif

@@ -15,9 +15,9 @@ ClassImp(TTaskPoolManager)
 
 //_________________________________________________________________________________________________
 TTaskPoolManager::TTaskPoolManager(Int_t numThreads) : TObject(),
-fNumThreads(numThreads),
-fThreadTask(0),
-fThreadPool(0)
+   fNumThreads(numThreads),
+   fThreadTask(0),
+   fThreadPool(0)
 {
    // Std constructor
    Init();
@@ -31,7 +31,7 @@ TTaskPoolManager::~TTaskPoolManager() {
 
 //_________________________________________________________________________________________________
 void TTaskPoolManager::Init() {
-   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask*>(fNumThreads, kFALSE);
+   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kFALSE);
    if (!fThreadTask) fThreadTask = new TTaskThread();
 }
 

@@ -18,7 +18,7 @@ ClassImp(TTaskStress)
 
 //_________________________________________________________________________________________________
 TTaskStress::TTaskStress(const char *name, const char *title) :
-TTaskParallel(name, title), fType(kSleep), fMaxNum(1) {
+   TTaskParallel(name, title), fType(kSleep), fMaxNum(1) {
    //
    // Std constructor
    //
@@ -33,7 +33,7 @@ TTaskStress::~TTaskStress() {
 
 //_________________________________________________________________________________________________
 TTaskStress::TTaskStress(const TTaskStress &obj) :
-		            TTaskParallel(obj), fType(obj.fType), fMaxNum(obj.fMaxNum)
+   TTaskParallel(obj), fType(obj.fType), fMaxNum(obj.fMaxNum)
 
 {
    //
@@ -71,13 +71,13 @@ void TTaskStress::Exec(Option_t *option) {
    if (!n.IsNull()) seed = n.Atoll();
    TRandom r(seed);
 
-   TTaskParallel *t = (TTaskParallel*) GetParent();
+   TTaskParallel *t = (TTaskParallel *) GetParent();
    TTaskParallel *tTest;
    TString prefix="";
    while(t) {
       prefix.Append(" ");
       tTest = t;
-      t = (TTaskParallel*)tTest->GetParent();
+      t = (TTaskParallel *)tTest->GetParent();
    }
 
 
@@ -97,7 +97,7 @@ void TTaskStress::Exec(Option_t *option) {
       Printf("[%s]%s%s D %.2f", option, prefix.Data(),GetName(), (Double_t) entries / 1e6);
    }
    timer.Stop();
-   //	timer.Print();
+   // timer.Print();
 
    //
    //   Int_t base=1e8*fMaxNum;

@@ -18,41 +18,48 @@
 class TTaskParallel : public TTask {
 
 public:
-	enum ETaskStatusType {kWaiting=0, kRunning=1, kDoneServing=2, kDone=3, kAllStatusTypes };
-	enum ETaskType {kCpu=0, kIO=1, kFake=2, kAllTypes };
-	TTaskParallel(const char *name = "Task", const char *title = "Task");
-	TTaskParallel(const TTaskParallel &obj);
-	TTaskParallel &operator=(const TTaskParallel &obj);
-	virtual ~TTaskParallel();
+   enum ETaskStatusType {kWaiting=0, kRunning=1, kDoneServing=2, kDone=3, kAllStatusTypes };
+   enum ETaskType {kCpu=0, kIO=1, kFake=2, kAllTypes };
+   TTaskParallel(const char *name = "Task", const char *title = "Task");
+   TTaskParallel(const TTaskParallel &obj);
+   TTaskParallel &operator=(const TTaskParallel &obj);
+   virtual ~TTaskParallel();
 
-	virtual void Add(TTask* task);
-	virtual void Exec(Option_t *option);
+   virtual void Add(TTask *task);
+   virtual void Exec(Option_t *option);
 
-	TTask *GetParent() { return fParent;}
-	void SetParent(TTask*task) { fParent = task; }
+   void AddDependency(TTask *t);
+   TList *GetDependencyList() { return fListDeps; }
 
-	void SetStatusType(ETaskStatusType t) { fTaskStatusType = t;}
-	void SetType(ETaskType t) { fTaskType = t;}
+   TTask *GetParent() { return fParent;}
+   void SetParent(TTask *task) { fParent = task; }
 
-	const char *GetStatusTypeName(ETaskStatusType t);
-	const char *GetStatusTypeName() { return GetStatusTypeName(fTaskStatusType);}
-	ETaskStatusType GetStatusType() { return fTaskStatusType; }
+   void SetStatusType(ETaskStatusType t) { fTaskStatusType = t;}
+   void SetType(ETaskType t) { fTaskType = t;}
 
-	const char *GetTypeName(ETaskType t);
-	const char *GetTypeName() { return GetTypeName(fTaskType);}
-	ETaskType GetType() { return fTaskType; }
+   const char *GetStatusTypeName(ETaskStatusType t);
+   const char *GetStatusTypeName() { return GetStatusTypeName(fTaskStatusType);}
+   ETaskStatusType GetStatusType() { return fTaskStatusType; }
 
-    void RunTask(Option_t *option,TTaskParallel::ETaskType type=TTaskParallel::kCpu);
+   const char *GetTypeName(ETaskType t);
+   const char *GetTypeName() { return GetTypeName(fTaskType);}
+   ETaskType GetType() { return fTaskType; }
+
+   void RunTask(Option_t *option,TTaskParallel::ETaskType type=TTaskParallel::kCpu);
+
+   Bool_t HasDependency();
 
 
 protected:
 
-	ETaskStatusType fTaskStatusType;
-	ETaskType fTaskType;
+   ETaskStatusType fTaskStatusType;
+   ETaskType fTaskType;
 
-	TTask	*fParent;
+   TTask *fParent;
 
-ClassDef(TTaskParallel, 1)
+   TList     *fListDeps;                // dependency list
+
+   ClassDef(TTaskParallel, 1)
 
 };
 
