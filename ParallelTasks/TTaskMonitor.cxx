@@ -90,17 +90,17 @@ void TTaskMonitor::StopMonitoring() {
 
 //_________________________________________________________________________________________________
 void TTaskMonitor::RefreshMonitorInfo() {
-	if (!fHist) fHist = new TH1I("monHist", "Monitor Hist", kAllStatusTypes, 0, kAllStatusTypes);
-	TCanvas *c = fEcanvas->GetCanvas();
-	if (c) {
-		fHist->Reset();
-		fHist->SetBinContent(kWaiting + 1, (Double_t) fgTaskTypeCount[kWaiting]);
-		fHist->SetBinContent(kRunning + 1, (Double_t) fgTaskTypeCount[kRunning]);
-		fHist->SetBinContent(kDoneServing + 1, (Double_t) fgTaskTypeCount[kDoneServing]);
-		fHist->SetBinContent(kDone + 1, (Double_t) fgTaskTypeCount[kDone]);
-		fHist->Draw();
-
-		c->cd();
-		c->Update();
-	}
+//	if (!fHist) fHist = new TH1I("monHist", "Monitor Hist", kAllStatusTypes, 0, kAllStatusTypes);
+//	TCanvas *c = fEcanvas->GetCanvas();
+//	if (c) {
+//		fHist->Reset();
+//		fHist->SetBinContent(kWaiting + 1, (Double_t) fgTaskTypeCount[kWaiting]);
+//		fHist->SetBinContent(kRunning + 1, (Double_t) fgTaskTypeCount[kRunning]);
+//		fHist->SetBinContent(kDoneServing + 1, (Double_t) fgTaskTypeCount[kDoneServing]);
+//		fHist->SetBinContent(kDone + 1, (Double_t) fgTaskTypeCount[kDone]);
+//		fHist->Draw();
+//
+//		c->cd();
+//		c->Update();
+//	}
 }

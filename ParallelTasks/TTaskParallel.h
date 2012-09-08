@@ -27,8 +27,8 @@ public:
 
 	virtual void Add(TTask* task);
 	virtual void Exec(Option_t *option);
-	virtual void ExecuteParallelTasks(Option_t *option);
 
+	TTask *GetParent() { return fParent;}
 	void SetParent(TTask*task) { fParent = task; }
 
 	void SetStatusType(ETaskStatusType t) { fTaskStatusType = t;}
@@ -42,7 +42,8 @@ public:
 	const char *GetTypeName() { return GetTypeName(fTaskType);}
 	ETaskType GetType() { return fTaskType; }
 
-	static void SetParallel(UInt_t numThreads=1,ETaskType t=kCpu) { fgNumOfThreads[t] = numThreads; }
+    void RunTask(Option_t *option,TTaskParallel::ETaskType type=TTaskParallel::kCpu);
+
 
 protected:
 
@@ -50,15 +51,6 @@ protected:
 	ETaskType fTaskType;
 
 	TTask	*fParent;
-	static TTaskThread *fgThreadTask;   // thread wrapper for TThreadPool
-	static TThreadPool<TTaskThread, TTask*> *fgThreadPool;   // thread pool
-
-	static Int_t fgNumOfThreads[kAllTypes];
-	static Int_t fgTaskTypeCount[kAllStatusTypes];
-	static Int_t GetTaskCount(ETaskStatusType t) { return fgTaskTypeCount[t]; }
-	static void ResetCounters() {	for (Int_t i = 0; i < kAllStatusTypes; i++) fgTaskTypeCount[i] = 0;}
-
-private:
 
 ClassDef(TTaskParallel, 1)
 

@@ -10,11 +10,12 @@
 #include <TRandom.h>
 //#include <TThread.h>
 #include "TTaskParallel.h"
+#include "TTaskManager.h"
 
-TTaskThread *TTaskParallel::fgThreadTask = 0;
-TThreadPool<TTaskThread, TTask*> *TTaskParallel::fgThreadPool = 0;
-Int_t TTaskParallel::fgNumOfThreads[] = { 0 };
-Int_t TTaskParallel::fgTaskTypeCount[] = { 0 };
+//TTaskThread *TTaskParallel::fgThreadTask = 0;
+//TThreadPool<TTaskThread, TTask*> *TTaskParallel::fgThreadPool = 0;
+//Int_t TTaskParallel::fgNumOfThreads[] = { 0 };
+//Int_t TTaskParallel::fgTaskTypeCount[] = { 0 };
 
 ClassImp(TTaskParallel)
 
@@ -30,12 +31,6 @@ TTaskParallel::~TTaskParallel() {
 	//
 	// Destructor
 	//
-
-	// TODO is it enough
-	delete fgThreadPool;
-	fgThreadPool = 0;
-	delete fgThreadTask;
-	fgThreadTask = 0;
 }
 
 //_________________________________________________________________________________________________
@@ -87,37 +82,28 @@ void TTaskParallel::Exec(Option_t *option) {
 //	Printf("%s [START] [%ld] %p", GetName(), fNumOfThreads,fgThreadPool);
 //	Printf("%s [ DONE] [%ld]", GetName(), fNumOfThreads);
 
+   RunTask(option);
+
 }
 
 //_________________________________________________________________________________________________
-void TTaskParallel::ExecuteParallelTasks(Option_t *option) {
-	//
-	// Exec of manager task
-	//
+void TTaskParallel::RunTask(Option_t *option,TTaskParallel::ETaskType type) {
 
-	Bool_t isAllDone = kTRUE;
-	TIter next(fTasks);
-	TTask *task;
-	TTaskParallel *t;
+   TIter next(fTasks);
+   TTask *task;
+   TTaskParallel *t;
+   TTaskManager *taskMgr = TTaskManager::GetTaskManager();
+   while ((task = (TTask*) next())) {
+      if (!task->IsActive()) continue;
+      t = (TTaskParallel*) task;
+      if (t->GetStatusType() == TTaskParallel::kWaiting) {
+//         Printf("Assigning Task %s",t->GetName());
+         taskMgr->PushTask(t);
 
-	if (GetStatusType() == TTaskParallel::kWaiting) {
-		if (fgThreadPool->TasksCount() - fgThreadPool->SuccessfulTasks() <= fgNumOfThreads[kCpu]) {
-			fgThreadPool->PushTask(*fgThreadTask, this);
-		}
-	}
-	fgTaskTypeCount[GetStatusType()]++;
-
-	while ((task = (TTask*) next())) {
-		if (!task->IsActive()) continue;
-		t = (TTaskParallel*) task;
-
-		if (t->GetStatusType() == TTaskParallel::kWaiting) {
-			if (fgThreadPool->TasksCount() - fgThreadPool->SuccessfulTasks() <= fgNumOfThreads[kCpu]) {
-				fgThreadPool->PushTask(*fgThreadTask, t);
-				t->ExecuteParallelTasks(option);
-			}
-		}
-	}
+//         t->Exec(option);
+      }
+      t->RunTask(option);
+   }
 
 }
 

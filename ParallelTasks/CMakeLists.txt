@@ -1,6 +1,7 @@
 
 set(SRCS
 TTaskThread.cxx
+TTaskPoolManager.cxx
 TTaskParallel.cxx
 TTaskManager.cxx
 TTaskStress.cxx

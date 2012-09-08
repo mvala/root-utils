@@ -14,11 +14,14 @@ void Test(Bool_t runParallel = kTRUE) {
    TStopwatch timer;
    timer.Start();
 
-//   gROOT->ProcessLine(".L TestThreadPool.C+");
-//   TestThreadPool(false);
+   //   gROOT->ProcessLine(".L TestThreadPool.C+");
+   //   TestThreadPool(false);
 
-   gROOT->ProcessLine(".L TestTaskManager.C+");
-   TestTaskManager();
+   //   gROOT->ProcessLine(".L TestTaskManager.C+");
+   //   TestTaskManager();
+
+   gROOT->ProcessLine(".L TestTaskManagerSimple.C+");
+   TestTaskManagerSimple();
 
    timer.Stop();
    timer.Print();
