@@ -8,8 +8,8 @@ void TestTaskManagerSimple() {
    Printf("TestTaskManagerSimple ...");
 
    TTaskManager *taskMgr = new TTaskManager("TaskMgr","TaskManager");
-   taskMgr->SetParallel(1,TTaskParallel::kCpu);
-   taskMgr->SetParallel(1,TTaskParallel::kIO);
+   taskMgr->SetParallel(2,TTaskParallel::kCpu);
+   taskMgr->SetParallel(2,TTaskParallel::kIO);
    taskMgr->SetParallel(10,TTaskParallel::kFake);
 
    Bool_t useDeps = kFALSE;

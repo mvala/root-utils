@@ -111,8 +111,6 @@ void TTaskParallel::RunTask(Option_t *option,TTaskParallel::ETaskType type) {
       if (!task->IsActive()) continue;
       t = (TTaskParallel *) task;
       if (t->GetStatusType() == TTaskParallel::kWaiting) {
-         //         Printf("Assigning Task %s",t->GetName());
-
          if (t->HasDependency()) {
             // task was not assigned
             taskMgr->SetAllAssigned(kFALSE);
