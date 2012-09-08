@@ -86,9 +86,6 @@ void TTaskManager::Exec(Option_t *option) {
    }
 
    Printf("Done");
-
-   //   ExecuteParallelTasks(option);
-
 }
 
 //_________________________________________________________________________________________________
@@ -98,3 +95,15 @@ void TTaskManager::PushTask(TTaskParallel *t) {
    taskPoolMgr->PushTask(t);
 }
 
+//_________________________________________________________________________________________________
+void TTaskManager::SetParallel(Int_t num,TTaskParallel::ETaskType type) {
+   if ((type < 0) || (type >= TTaskParallel::kAllTypes )) {
+      Printf("Error: Wrong type !!! Skipping ...");
+      return;
+   }
+   if (num<=0) {
+      Printf("Error: Not setting!!! Number of threads has to be > 0. Skipping ...");
+      return;
+   }
+   fNumOfThreads[type] = num;
+}

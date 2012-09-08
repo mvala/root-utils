@@ -26,7 +26,7 @@ public:
    void TaskCompleted() { Emit("TaskCompleted()"); fDepCondition.Signal();}
    void FinishServingTasks() { Emit("FinishServingTasks()");}
 
-   void SetParallel(Int_t num,TTaskParallel::ETaskType type=TTaskParallel::kCpu) { fNumOfThreads[type] = num; }
+   void SetParallel(Int_t num,TTaskParallel::ETaskType type=TTaskParallel::kCpu);
 
    void PushTask(TTaskParallel *t);
 
