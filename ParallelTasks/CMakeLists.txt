@@ -5,7 +5,9 @@ TTaskPoolManager.cxx
 TTaskParallel.cxx
 TTaskManager.cxx
 TTaskStress.cxx
-TTaskMonitor.cxx
+TTaskMonitorMsg.cxx
+TTaskMonitorServ.cxx
+TTaskMonitorGui.cxx
 )
 
 set(INCLUDE_DIRECTORIES

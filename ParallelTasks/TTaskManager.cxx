@@ -79,6 +79,15 @@ void TTaskManager::Exec(Option_t *option) {
    }
 
    // waiting for tasks to finish
+
+//
+
+   for (Int_t i=0; i<kAllTypes; i++) {
+      tpm = (TTaskPoolManager *) fTaskThreadPools->At(i);
+      if (i == TTaskParallel::kFake) FinishServingTasks();
+      tpm->Stop(kTRUE);
+   }
+
    TIter next(fTaskThreadPools);
    TTaskPoolManager *pool;
    while ((pool = (TTaskPoolManager *)next())) {

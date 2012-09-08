@@ -20,8 +20,8 @@ endif
 
 CXXFLAGS += $(ALICEINC) -g
 
-SRCS = TParallelTask.cxx TParallelTaskManager.cxx TParallelTaskTest.cxx
-HDRS = TParallelTask.h TParallelTaskManager.h TParallelTaskTest.h
+SRCS = TTaskThread.cxx TTaskPoolManager.cxx TTaskParallel.cxx TTaskManager.cxx TTaskStress.cxx TTaskMonitorMsg.cxx TTaskMonitorServ.cxx TTaskMonitorGui.cxx
+HDRS = TTaskThread.h TTaskPoolManager.h TTaskParallel.h TTaskManager.h TTaskStress.h TTaskMonitorMsg.h TTaskMonitorServ.h TTaskMonitorGui.h
 DHDR = $(PACKAGE)LinkDef.h
 
 DHDR_MY := $(DHDR)

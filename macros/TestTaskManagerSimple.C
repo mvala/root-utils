@@ -1,11 +1,16 @@
 #ifndef __CINT__
 #include <TString.h>
 #include <TTaskManager.h>
+#include <TTaskMonitorServ.h>
 #include <TTaskStress.h>
 #endif
 
 void TestTaskManagerSimple() {
    Printf("TestTaskManagerSimple ...");
+
+//   TTaskMonitor *taskMon = new TTaskMonitor("mon","Task Monitor");
+//   taskMon->Exec("");
+//   return;
 
    TTaskManager *taskMgr = new TTaskManager("TaskMgr","TaskManager");
    taskMgr->SetParallel(2,TTaskParallel::kCpu);
@@ -15,7 +20,11 @@ void TestTaskManagerSimple() {
    Bool_t useDeps = kFALSE;
    useDeps = kTRUE;
 
-   TTaskStress *task1,*task2;
+   TTaskMonitorServ *taskMon = new TTaskMonitorServ("monServ","Task Monitor Serv");
+//   taskMon->Exec("");
+   taskMgr->Add(taskMon);
+
+   TTaskStress *task1,*task2,*task3;
    TTaskStress::EStressType stressType = TTaskStress::kSleep;
    stressType = TTaskStress::kCpu;
 
@@ -31,6 +40,7 @@ void TestTaskManagerSimple() {
 
    task1 = new TTaskStress("task300", "3");
    task1->SetStressType(stressType);
+   task3 = task1;
 
    task2 = new TTaskStress("task310", "4");
    task2->SetStressType(stressType);
@@ -50,6 +60,7 @@ void TestTaskManagerSimple() {
    taskMgr->Add(task1);
 
    task1= new TTaskStress("task400", "10");
+//   if (useDeps) task1->AddDependency(task3);
    task1->SetStressType(stressType);
 
    task2 = new TTaskStress("task410", "11");
