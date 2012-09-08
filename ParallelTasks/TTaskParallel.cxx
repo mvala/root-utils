@@ -117,7 +117,7 @@ void TTaskParallel::RunTask(Option_t *option,TTaskParallel::ETaskType type) {
             // task was not assigned
             taskMgr->SetAllAssigned(kFALSE);
          } else {
-
+            t->SetStatusType(TTaskParallel::kAssigned);
             taskMgr->PushTask(t);
          }
       }
@@ -142,6 +142,8 @@ const char *TTaskParallel::GetStatusTypeName(ETaskStatusType t) {
    switch (t) {
    case kWaiting:
       return "W";
+   case kAssigned:
+      return "A";
    case kRunning:
       return "R";
    case kDoneServing:

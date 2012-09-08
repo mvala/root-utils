@@ -18,7 +18,7 @@
 class TTaskParallel : public TTask {
 
 public:
-   enum ETaskStatusType {kWaiting=0, kRunning=1, kDoneServing=2, kDone=3, kAllStatusTypes };
+   enum ETaskStatusType {kWaiting=0, kAssigned=1,kRunning=2, kDoneServing=3, kDone=4, kAllStatusTypes };
    enum ETaskType {kCpu=0, kIO=1, kFake=2, kAllTypes };
    TTaskParallel(const char *name = "Task", const char *title = "Task");
    TTaskParallel(const TTaskParallel &obj);

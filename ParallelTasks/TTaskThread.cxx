@@ -15,9 +15,11 @@ bool TTaskThread::runTask(TTask *task) {
    fThreadID = TThread::SelfId();
    t->SetStatusType(TTaskParallel::kRunning);
    t->Exec(TString::Format("%lld", fThreadID).Data());
-   if (t->GetStatusType() == TTaskParallel::kRunning) t->SetStatusType(TTaskParallel::kDone);
-   TTaskManager *mgr = TTaskManager::GetTaskManager();
-   mgr->TaskCompleted();
+   if (t->GetStatusType() == TTaskParallel::kRunning) {
+      t->SetStatusType(TTaskParallel::kDone);
+      TTaskManager *mgr = TTaskManager::GetTaskManager();
+      mgr->TaskCompleted();
+   }
    return true;
 }
 

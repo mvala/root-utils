@@ -23,9 +23,8 @@ public:
 
    virtual void Exec(Option_t *option);
 
-   void FinishServingTasks() { Emit("FinishServingTasks()");}
    void TaskCompleted() { Emit("TaskCompleted()"); fDepCondition.Signal();}
-
+   void FinishServingTasks() { Emit("FinishServingTasks()");}
 
    void SetParallel(Int_t num,TTaskParallel::ETaskType type=TTaskParallel::kCpu) { fNumOfThreads[type] = num; }
 

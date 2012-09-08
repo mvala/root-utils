@@ -15,9 +15,9 @@ ClassImp(TTaskPoolManager)
 
 //_________________________________________________________________________________________________
 TTaskPoolManager::TTaskPoolManager(Int_t numThreads) : TObject(),
-   fNumThreads(numThreads),
-   fThreadTask(0),
-   fThreadPool(0)
+fNumThreads(numThreads),
+fThreadTask(0),
+fThreadPool(0)
 {
    // Std constructor
    Init();
@@ -38,12 +38,17 @@ void TTaskPoolManager::Init() {
 //_________________________________________________________________________________________________
 void TTaskPoolManager::Print(Option_t *option) const {
 
-//   Printf("NumberOfThreads = %d (%d)",fNumThreads,fThreadPool->TasksCount());
    Printf("NumberOfThreads = %d",fNumThreads);
 }
+
 //_________________________________________________________________________________________________
 void TTaskPoolManager::PushTask(TTaskParallel *t) {
 
    fThreadPool->PushTask(*fThreadTask, t);
+}
+
+//_________________________________________________________________________________________________
+void TTaskPoolManager::Stop(Bool_t wait) {
+   fThreadPool->Stop(wait);
 }
 

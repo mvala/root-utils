@@ -24,12 +24,12 @@ public:
    virtual void Print(Option_t *option = "") const;
 
    void PushTask(TTaskParallel *t);
-   void Stop(Bool_t wait=kFALSE) { fThreadPool->Stop(wait);}
+   void Stop(Bool_t wait=kFALSE);
 
 private:
 
-   Int_t                             fNumThreads; // number of threads
-   TTaskThread                      *fThreadTask; // thread wrapper for TThreadPool
+   Int_t                              fNumThreads; // number of threads
+   TTaskThread                       *fThreadTask; // thread wrapper for TThreadPool
    TThreadPool<TTaskThread, TTask *> *fThreadPool; // thread pool
 
    ClassDef(TTaskPoolManager, 1)

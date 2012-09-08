@@ -66,14 +66,6 @@ void TTaskManager::Exec(Option_t *option) {
       tpm->Print();
    }
 
-//   TTaskManager *tm = TTaskManager::GetTaskManager();
-//   if (!tm) {
-//      Printf("Error: Create TaskManager first !!!!");
-//      return;
-//   } else {
-//      tm->AddDependency(this);
-//   }
-
    // Loops until not all tasks are assigned
    Int_t counter=0;
    while (1) {
