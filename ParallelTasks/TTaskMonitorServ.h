@@ -31,13 +31,14 @@ public:
    void StopMonitoring();
 
    void PrepareMonitoringMessage(TTaskMonitorMsg*msg);
+   void DisconnectAllClients();
 
 private:
 
    TServerSocket *fServSocket;
    TMonitor *fMonitor;
    TSocket  *fSocket;
-   TSocket  *fSocketFinish;
+   TSocket  *fSocketInternal;
 
    ClassDef(TTaskMonitorServ, 1)
 };

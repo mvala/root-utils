@@ -24,7 +24,7 @@ TTaskParallel(name, title),
 fServSocket(0),
 fMonitor(0),
 fSocket(0),
-fSocketFinish(0)
+fSocketInternal(0)
 {
    //
    // Std constructor
@@ -39,6 +39,10 @@ TTaskMonitorServ::~TTaskMonitorServ() {
    //
    // Destructor
    //
+
+   delete fServSocket;
+   delete fMonitor;
+   delete fSocketInternal;
 }
 
 //_________________________________________________________________________________________________
@@ -53,78 +57,96 @@ void TTaskMonitorServ::Exec(Option_t *option) {
    fMonitor = new TMonitor;
    fMonitor->Add(fServSocket);
 
-   // init connection
-   fSocketFinish = new TSocket("localhost", 9090);
+   fSocketInternal = new TSocket("localhost", 9090);
 
-   TSocket *s0 = 0;
-   TMessage *mess = 0;
+   Printf("Server is ON ...");
+
+
+   TSocket *sCur = 0;
+   TSocket *sServCur = 0;
+   TMessage *msgCur = 0;
    while (1) {
-      fSocket = fMonitor->Select();
-      if (!fSocket) continue;
-      if (!fSocket->IsValid()) continue;
+      sCur = fMonitor->Select();
+      if (!sCur) break;
 
-      if (fSocket->IsA() == TServerSocket::Class()) {
-         s0 = ((TServerSocket *)fSocket)->Accept();
-         if (s0) {
-//            Printf("New connection ...");
-            fMonitor->Add(s0);
+      if (sCur->IsA() == TServerSocket::Class()) {
+         // we have server socket
+         Printf("We have TServerSocket ...");
+         sServCur = ((TServerSocket *)sCur)->Accept();
+         if (sServCur) {
+
+            TInetAddress adr = sServCur->GetInetAddress();
+            Printf("New connection accepted from %s(%s) ...",adr.GetHostName(),adr.GetHostAddress());
+            fMonitor->Add(sServCur);
+            // sending 'connected' string
+            sServCur->Send("connected");
+            Printf("We sent 'connected' message");
+
          }
-         continue;
-      }
-      if (!fSocket->IsValid()) continue;
-      fSocket->Recv(mess);
-      if (!mess) continue;
-      TThread::Lock();
-      if (mess->What() == kMESS_STRING) {
-         char str[64];
-         mess->ReadString(str, 64);
-         TString msg = str;
-         if (!msg.CompareTo("done")) break;
-         else if (!msg.CompareTo("info")) {
-//            Printf("info");
-            TTaskMonitorMsg *msgMon = new TTaskMonitorMsg();
-            PrepareMonitoringMessage(msgMon);
-            TMessage message(kMESS_OBJECT);
-            message.WriteObject(msgMon);
-            fSocket->Send(message);
-            delete msgMon;
-         } else if (!msg.CompareTo("disconnect")) {
-            fMonitor->Remove(fSocket);
-         }
-         //         fMonitor->Remove(fSocket);
-         //         if (fMonitor->GetActive() == 0) {
-         //            Printf("No more active clients... stopping");
-         //            break;
-         //         }
       } else {
-         Printf("*** Unexpected message ***");
+         // socket is NOT server socket
+
+         // let's what we get
+         sCur->Recv(msgCur);
+         if (!msgCur) continue;
+         if (msgCur->What() == kMESS_STRING) {
+            char str[64];
+            msgCur->ReadString(str, 64);
+            TString msg = str;
+            if (!msg.CompareTo("disconnect")) {fMonitor->Remove(sCur);}
+            else if (!msg.CompareTo("end")) {
+               fMonitor->Remove(sCur);
+               DisconnectAllClients();
+               break;
+            }
+            else if (!msg.CompareTo("info")) {
+               TTaskMonitorMsg *msgMon = new TTaskMonitorMsg();
+               PrepareMonitoringMessage(msgMon);
+               TMessage message(kMESS_OBJECT);
+               message.WriteObject(msgMon);
+               sCur->Send(message);
+               delete msgMon;
+            }
+            else Printf("*** Unexpected message ***");
+
+         }
+         delete msgCur;
+         sServCur = 0;
       }
-      delete mess;
-      TThread::UnLock();
 
    }
+   fMonitor->RemoveAll();
 
-   //   fMonitor->Remove(s0);
-//   fMonitor->RemoveAll();
-
+   Printf("Server is OFF ...");
 }
 
 //_________________________________________________________________________________________________
 void TTaskMonitorServ::StopMonitoring()
 {
-   fSocketFinish->Send("done");
-   fSocketFinish->Close();
-   if (fSocket) fMonitor->Remove(fSocket);
-//   fMonitor->Remove(fServSocket);
-   fMonitor->RemoveAll();
+   // send end signal
+   fSocketInternal->Send("end");
+   fSocketInternal->Close();
    fServSocket->Close();
-   delete fSocketFinish;
-   delete fServSocket;
-   Printf("TTaskMonitorServ stoped ...");
 }
 
 //_________________________________________________________________________________________________
 void TTaskMonitorServ::PrepareMonitoringMessage(TTaskMonitorMsg*msg)
 {
    msg->SetNum(4);
+}
+//_________________________________________________________________________________________________
+void TTaskMonitorServ::DisconnectAllClients()
+{
+
+   fMonitor->Remove(fSocketInternal);
+   TList *l = fMonitor->GetListOfActives();
+   if (l) {
+      TIter next(l);
+      Printf("NumConnections %d",l->GetEntries());
+      TSocket *s;
+      while((s = (TSocket*)next())) {
+         if (s->IsA() == TServerSocket::Class()) continue;
+         s->Send("disconnect",kMESS_STRING);
+      }
+   }
 }
