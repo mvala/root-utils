@@ -31,7 +31,6 @@ public:
    void StopMonitoring();
 
    void SendMonitoringMsg(TTaskParallel::ETaskType type);
-//   void PrepareMonitoringMessage(TTaskParallel::ETaskType type);
    void DisconnectAllClients();
 
 private:
