@@ -12,6 +12,7 @@
 #include <TGLayout.h>
 #include <TGButton.h>
 #include <TGLabel.h>
+#include <TGInputDialog.h>
 
 #include <TRootEmbeddedCanvas.h>
 #include <TSocket.h>
@@ -30,7 +31,7 @@ ClassImp(TTaskMonitorGui)
 TTaskMonitorGui::TTaskMonitorGui(const TGWindow *p,UInt_t w,UInt_t h) :
 TGMainFrame(p,w,h),
 fSocketMonitor(0),
-fHost("localhost"),
+fHost(""),
 fPort(9090),
 fNumConnectRetry(5),
 fSocket(0),
@@ -130,7 +131,13 @@ void TTaskMonitorGui::ConnectDisconnect() {
 
    if (!fSocket) {
 
-      // message box
+
+      if (fHost.IsNull()) {
+         // input box
+         char ret[64];
+         TGInputDialog *id = new TGInputDialog(gClient->GetRoot(),this,"Enter hostname","localhost",ret);
+         fHost = ret;
+      }
 
       for (Int_t iTry=0;iTry<fNumConnectRetry;iTry++) {
          fSocket = new TSocket(fHost.Data(), fPort);
