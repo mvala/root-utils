@@ -55,7 +55,7 @@ fEcanvas(0)
    // Create a horizontal frame widget with buttons
    TGHorizontalFrame *hframe = new TGHorizontalFrame(this,600,40);
    fConnectButton = new TGTextButton(hframe,"Dis&connect");
-   fConnectButton->Connect("Clicked()","TTaskMonitorGui",this,"()");
+   fConnectButton->Connect("Clicked()","TTaskMonitorGui",this,"ConnectDisconnect()");
    hframe->AddFrame(fConnectButton, new TGLayoutHints(kLHintsCenterX,5,5,3,4));
 
    fRefreshButton = new TGTextButton(hframe,"&Refresh");
