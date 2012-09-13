@@ -30,7 +30,7 @@ public:
 
    void StopMonitoring();
 
-   void SendMonitoringMsg(TTaskParallel::ETaskType type);
+   void SendMonitoringMsg(Int_t val,Int_t val2);
    void DisconnectAllClients();
 
 private:

@@ -13,16 +13,18 @@ void TestTaskManagerSimple() {
 //   return;
 
    TTaskManager *taskMgr = new TTaskManager("TaskMgr","TaskManager");
-   taskMgr->SetParallel(2,TTaskParallel::kCpu);
+   taskMgr->SetParallel(4,TTaskParallel::kCpu);
    taskMgr->SetParallel(2,TTaskParallel::kIO);
    taskMgr->SetParallel(10,TTaskParallel::kFake);
 
    Bool_t useDeps = kFALSE;
    useDeps = kTRUE;
 
+   taskMgr->UseMonitoring();
+
    TTaskMonitorServ *taskMon = new TTaskMonitorServ("monServ","Task Monitor Serv");
 //   taskMon->Exec("");
-   taskMgr->Add(taskMon);
+//   taskMgr->Add(taskMon);
 
    TTaskStress *task1,*task2,*task3;
    TTaskStress::EStressType stressType = TTaskStress::kSleep;

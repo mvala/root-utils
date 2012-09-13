@@ -14,12 +14,12 @@ public:
 
    void Reset();
 
-   Int_t GetNumThreadsDone(TTaskParallel::ETaskType type) {return fNumberOfThreadsDone[type];}
-   void SetNumThredsDone(Int_t num,TTaskParallel::ETaskType type) { fNumberOfThreadsDone[type] = num ;}
+   void IncrementThread(TTaskParallel::ETaskType type,TTaskParallel::ETaskStatusType status) { fNumberOfThreads[type][status]++;}
+   Int_t GetNumThreads(TTaskParallel::ETaskType type,TTaskParallel::ETaskStatusType status) { return fNumberOfThreads[type][status];}
 
-   void IncrementThreadDone(TTaskParallel::ETaskType type) { fNumberOfThreadsDone[type]++;}
 private:
-   Int_t fNumberOfThreadsDone[TTaskParallel::kAllTypes];
+
+   Int_t fNumberOfThreads[TTaskParallel::kAllTypes][TTaskParallel::kAllStatusTypes];
 
    ClassDef(TTaskMonitorMsg,1)
 };

@@ -33,7 +33,7 @@ TGMainFrame(p,w,h),
 fSocketMonitor(0),
 fHost(""),
 fPort(9090),
-fNumConnectRetry(5),
+fNumConnectRetry(10),
 fSocket(0),
 fMonMsg(0),
 fConnectButton(0),
@@ -160,7 +160,6 @@ void TTaskMonitorGui::ConnectDisconnect() {
    if (fSocket && fSocket->IsValid()) {
       fConnectButton->SetText("Dis&connect");
       fRefreshButton->SetEnabled(kTRUE);
-      //      SetConnected();
       WaitFormInfoMessage();
    }
 
@@ -218,22 +217,22 @@ void TTaskMonitorGui::DrawMonitorWindow() {
 
    if (!fMonMsg) return;
 
-   //   Printf("DrawMonitorWindow()");
+   Int_t running,done;
    for(Int_t i;i<TTaskParallel::kAllTypes;i++) {
-      fLabelNumThreads[i]->SetText(fMonMsg->GetNumThreadsDone((TTaskParallel::ETaskType)i));
+      running = fMonMsg->GetNumThreads((TTaskParallel::ETaskType)i,TTaskParallel::kRunning);
+      done = fMonMsg->GetNumThreads((TTaskParallel::ETaskType)i,TTaskParallel::kDone);
+      fLabelNumThreads[i]->SetText(TString::Format("%d (%d)",running-done,done).Data());
+//      fLabelNumThreads[i]->SetText(TString::Format("%d (%d)",running,done).Data());
    }
 
 }
 
 //_________________________________________________________________________________________________
 void TTaskMonitorGui::WaitFormInfoMessage() {
-   //   Printf("Connected.........");
    TSocket *socket;
    TMessage *msgCur;
    while (1) {
-      //      Printf("fSocketMonitor->Select()");
       socket = fSocketMonitor->Select();
-      //      Printf("After fSocketMonitor->Select()");
       HandleMessage("");
 
    }

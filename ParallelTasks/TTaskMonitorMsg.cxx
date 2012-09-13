@@ -11,7 +11,12 @@ TTaskMonitorMsg::~TTaskMonitorMsg() {
 }
 
 void TTaskMonitorMsg::Reset() {
-   for(Int_t i;i<TTaskParallel::kAllTypes;i++) {
-      fNumberOfThreadsDone[i] = 0;
+   Int_t i,j;
+   for(i=0;i<TTaskParallel::kAllTypes;i++) {
+      for(j=0;j<TTaskParallel::kAllStatusTypes;j++) {
+      fNumberOfThreads[i][j] = 0;
+      }
    }
+
+   fNumberOfThreads[0][TTaskParallel::kRunning] = 4;
 }

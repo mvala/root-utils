@@ -12,6 +12,7 @@
 #include <TStopwatch.h>
 #include <TThreadPool.h>
 
+#include "TTaskMonitorServ.h"
 #include "TTaskPoolManager.h"
 #include "TTaskThread.h"
 #include "TTaskParallel.h"
@@ -24,10 +25,13 @@ ClassImp(TTaskManager)
 
 //_________________________________________________________________________________________________
 TTaskManager::TTaskManager(const char *name, const char *title) :
-   TTaskParallel(name, title),
-   fTaskThreadPools(0),
-   fIsAllAssigned(kFALSE),
-   fDepCondition()
+TTaskParallel(name, title),
+fTaskThreadPools(0),
+fIsAllAssigned(kFALSE),
+fDepCondition(),
+fUseMonitoring(kFALSE),
+fMonThreadPool(0),
+fTaskMon(0)
 {
    // Std constructor
 
@@ -36,15 +40,16 @@ TTaskManager::TTaskManager(const char *name, const char *title) :
    }
 
    fgTaskManager = this;
-
-//   ResetCounters();
-
 }
 
 //_________________________________________________________________________________________________
 TTaskManager::~TTaskManager() {
    // Destructor
 
+   fTaskThreadPools->Delete();
+   delete fTaskThreadPools;
+   delete fMonThreadPool;
+   delete fTaskMon;
 }
 
 //_________________________________________________________________________________________________
@@ -52,6 +57,8 @@ void TTaskManager::Exec(Option_t *option) {
    // Exec of manager task
 
    if (!fParent) {
+
+      if (fUseMonitoring) StartMonitoringServer();
 
       // We are SuperManager and we do Init
       fTaskThreadPools = new TObjArray();
@@ -75,13 +82,10 @@ void TTaskManager::Exec(Option_t *option) {
       RunTask(option);
       TThread::UnLock();
       if (fIsAllAssigned) break;
-      else fDepCondition.Wait();
+      fDepCondition.Wait();
    }
 
    // waiting for tasks to finish
-
-//
-
    for (Int_t i=0; i<kAllTypes; i++) {
       tpm = (TTaskPoolManager *) fTaskThreadPools->At(i);
       if (i == TTaskParallel::kFake) FinishServingTasks();
@@ -93,6 +97,9 @@ void TTaskManager::Exec(Option_t *option) {
    while ((pool = (TTaskPoolManager *)next())) {
       pool->Stop(kTRUE);
    }
+
+   // sync monitoring
+   if (fUseMonitoring) fMonThreadPool->Stop(kTRUE);
 
    Printf("Done");
 }
@@ -115,4 +122,24 @@ void TTaskManager::SetParallel(Int_t num,TTaskParallel::ETaskType type) {
       return;
    }
    fNumOfThreads[type] = num;
+}
+
+//_________________________________________________________________________________________________
+void TTaskManager::TaskStatusChanged(Int_t type,Int_t status){
+   Long_t val[2];
+   val[0] = (Long_t)type;
+   val[1] = (Long_t)status;
+   Emit("TaskStatusChanged(Int_t,Int_t)",val);
+
+   if (status == (Int_t)TTaskParallel::kDone) {
+      fDepCondition.Signal();
+   }
+}
+
+//_________________________________________________________________________________________________
+void TTaskManager::StartMonitoringServer() {
+
+   fMonThreadPool =  new TTaskPoolManager(1);
+   if (!fTaskMon) fTaskMon = new TTaskMonitorServ("monServ","Task Monitor Serv");
+   fMonThreadPool->PushTask(fTaskMon);
 }

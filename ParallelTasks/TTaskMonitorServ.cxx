@@ -52,7 +52,7 @@ void TTaskMonitorServ::Exec(Option_t *option) {
 
    TTaskManager *tm = TTaskManager::GetTaskManager();
    if (tm) {
-      tm->Connect("TaskCompleted(Int_t)", "TTaskMonitorServ", this, "SendMonitoringMsg(Int_t)");
+      tm->Connect("TaskStatusChanged(Int_t,Int_t)", "TTaskMonitorServ", this, "SendMonitoringMsg(Int_t,Int_t)");
       tm->Connect("FinishServingTasks()", "TTaskMonitorServ", this, "StopMonitoring()");
    }
 
@@ -84,9 +84,14 @@ void TTaskMonitorServ::Exec(Option_t *option) {
             // sending 'connected' string
             sServCur->Send("connected");
             Printf("We sent 'connected' message");
-            TMessage message(kMESS_OBJECT);
-            message.WriteObject(fMonMsg);
-            sServCur->Send(message);
+            if (!fMonMsg) {
+               fMonMsg = new TTaskMonitorMsg();
+               fMonMsg->Reset();
+               TMessage message(kMESS_OBJECT);
+               message.WriteObject(fMonMsg);
+               sServCur->Send(message);
+            }
+
 
          }
       } else {
@@ -106,7 +111,6 @@ void TTaskMonitorServ::Exec(Option_t *option) {
                break;
             }
             else if (!msg.CompareTo("info")) {
-               //               PrepareMonitoringMessage(TTaskParallel::kCpu);
                TMessage message(kMESS_OBJECT);
                message.WriteObject(fMonMsg);
                sCur->Send(message);
@@ -134,11 +138,14 @@ void TTaskMonitorServ::StopMonitoring()
 }
 
 //_________________________________________________________________________________________________
-void TTaskMonitorServ::SendMonitoringMsg(TTaskParallel::ETaskType type)
+void TTaskMonitorServ::SendMonitoringMsg(Int_t val,Int_t val2)
 {
-   if (!fMonMsg) fMonMsg = new TTaskMonitorMsg();
-   fMonMsg->IncrementThreadDone(type);
 
+
+   TThread::Lock();
+   if (!fMonMsg) fMonMsg = new TTaskMonitorMsg();
+   fMonMsg->IncrementThread((TTaskParallel::ETaskType)val,(TTaskParallel::ETaskStatusType)val2);
+   if (!fMonitor) return;
    TList *l = fMonitor->GetListOfActives();
    if (l) {
       TIter next(l);
@@ -147,12 +154,13 @@ void TTaskMonitorServ::SendMonitoringMsg(TTaskParallel::ETaskType type)
       while((s = (TSocket*)next())) {
          if (s->IsA() == TServerSocket::Class()) continue;
          if (s == fSocketInternal) continue;
-         Printf("Sending...");
          TMessage message(kMESS_OBJECT);
          message.WriteObject(fMonMsg);
+//         Printf("Sending ...");
          s->Send(message);
       }
    }
+   TThread::UnLock();
 }
 
 //_________________________________________________________________________________________________

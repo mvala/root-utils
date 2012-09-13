@@ -13,12 +13,21 @@
 bool TTaskThread::runTask(TTask *task) {
    TTaskParallel *t = (TTaskParallel *) task;
    fThreadID = TThread::SelfId();
+   TTaskManager *mgr = TTaskManager::GetTaskManager();
    t->SetStatusType(TTaskParallel::kRunning);
+   TThread::Lock();
+   mgr->TaskStatusChanged((Int_t)t->GetType(),(Int_t)TTaskParallel::kRunning);
+   TThread::UnLock();
+
+   // executing task
    t->Exec(TString::Format("%lld", fThreadID).Data());
+
    if (t->GetStatusType() == TTaskParallel::kRunning) {
       t->SetStatusType(TTaskParallel::kDone);
-      TTaskManager *mgr = TTaskManager::GetTaskManager();
-      mgr->TaskCompleted(t->GetType());
+      TThread::Lock();
+      mgr->TaskStatusChanged((Int_t)t->GetType(),(Int_t)TTaskParallel::kDone);
+      TThread::UnLock();
+
    }
    return true;
 }
