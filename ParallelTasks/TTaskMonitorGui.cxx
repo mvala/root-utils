@@ -15,6 +15,7 @@
 
 #include <TRootEmbeddedCanvas.h>
 #include <TSocket.h>
+#include <TMonitor.h>
 #include <TMessage.h>
 #include <TApplication.h>
 
@@ -27,31 +28,34 @@ ClassImp(TTaskMonitorGui)
 
 //_________________________________________________________________________________________________
 TTaskMonitorGui::TTaskMonitorGui(const TGWindow *p,UInt_t w,UInt_t h) :
-TGMainFrame(p,w,h),fSocket(0),fMonMsg(0),fConnectButton(0),fRefreshButton(0),fEcanvas(0)
+TGMainFrame(p,w,h),
+fSocketMonitor(0),
+fHost("localhost"),
+fPort(9090),
+fNumConnectRetry(5),
+fSocket(0),
+fMonMsg(0),
+fConnectButton(0),
+fRefreshButton(0),
+fEcanvas(0)
 {
    //
    // Std constructor
    //
 
-
-
    TGVerticalFrame *infoFrameMain = new TGVerticalFrame(this, 600, 400,kHorizontalFrame);
 
    infoFrameMain->AddFrame(CreateInfoFrame(infoFrameMain), new TGLayoutHints( kLHintsExpandY    | kLHintsExpandX,2,2,2,2));
 
-
-//   fEcanvas = new TRootEmbeddedCanvas("ECanvas", infoFrameMain, 400, 400);
-//   infoFrameMain->AddFrame(fEcanvas, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
+   //   fEcanvas = new TRootEmbeddedCanvas("ECanvas", infoFrameMain, 400, 400);
+   //   infoFrameMain->AddFrame(fEcanvas, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
 
    AddFrame(infoFrameMain,new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
-
-
-
 
    // Create a horizontal frame widget with buttons
    TGHorizontalFrame *hframe = new TGHorizontalFrame(this,600,40);
    fConnectButton = new TGTextButton(hframe,"Dis&connect");
-   fConnectButton->Connect("Clicked()","TTaskMonitorGui",this,"ConnectDisconnect()");
+   fConnectButton->Connect("Clicked()","TTaskMonitorGui",this,"()");
    hframe->AddFrame(fConnectButton, new TGLayoutHints(kLHintsCenterX,5,5,3,4));
 
    fRefreshButton = new TGTextButton(hframe,"&Refresh");
@@ -66,16 +70,22 @@ TGMainFrame(p,w,h),fSocket(0),fMonMsg(0),fConnectButton(0),fRefreshButton(0),fEc
    SetWindowName("Task Monitoring GUI");
    MapSubwindows();
    Resize(GetDefaultSize());
-
    MapWindow();
    fConnectButton->SetText("&Connect");
+
+   fSocketMonitor = new TMonitor();
+
+   Connect("SetConnected()","TTaskMonitorGui",this,"WaitFormInfoMessage()");
+
+
+
 }
 
 //_________________________________________________________________________________________________
 TGGroupFrame *TTaskMonitorGui::CreateInfoFrame(TGWindow *p) {
    TGGroupFrame *infoGroupFrame = new TGGroupFrame(p,"MY info");
    infoGroupFrame->SetTitlePos(TGGroupFrame::kCenter);
-//   infoGroupFrame->SetLayoutManager(new TGVerticalLayout(infoGroupFrame));
+   //   infoGroupFrame->SetLayoutManager(new TGVerticalLayout(infoGroupFrame));
 
    TTaskParallel t;
    TGLabel *l;
@@ -89,7 +99,7 @@ TGGroupFrame *TTaskMonitorGui::CreateInfoFrame(TGWindow *p) {
       l = new TGLabel(hFrame," : ");
       hFrame->AddFrame(l,new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,1,1,1,1));
 
-      fLabelNumThreads[i] = new TGLabel(hFrame,"100");
+      fLabelNumThreads[i] = new TGLabel(hFrame,"0");
       hFrame->AddFrame(fLabelNumThreads[i],new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,1,1,1,1));
 
       infoGroupFrame->AddFrame(hFrame,new TGLayoutHints(kLHintsLeft | kLHintsTop |kLHintsExpandX, 1,1,1,1));
@@ -119,13 +129,22 @@ void TTaskMonitorGui::Refresh() {
 void TTaskMonitorGui::ConnectDisconnect() {
 
    if (!fSocket) {
-      fSocket = new TSocket("localhost", 9090);
-      if (!fSocket->IsValid()){
-         delete fSocket;
-         fSocket = 0;
-      } else {
-         TMessage::EnableSchemaEvolutionForAll(kTRUE);
-         HandleMessage("");
+
+      // message box
+
+      for (Int_t iTry=0;iTry<fNumConnectRetry;iTry++) {
+         fSocket = new TSocket(fHost.Data(), fPort);
+         if (!fSocket->IsValid()){
+            fSocketMonitor->Remove(fSocket);
+            delete fSocket;
+            fSocket = 0;
+         } else {
+            TMessage::EnableSchemaEvolutionForAll(kTRUE);
+            fSocketMonitor->Add(fSocket);
+            HandleMessage("");
+            break;
+         }
+         gSystem->Sleep(1000);
       }
    } else {
       Quit(kFALSE);
@@ -134,6 +153,8 @@ void TTaskMonitorGui::ConnectDisconnect() {
    if (fSocket && fSocket->IsValid()) {
       fConnectButton->SetText("Dis&connect");
       fRefreshButton->SetEnabled(kTRUE);
+      //      SetConnected();
+      WaitFormInfoMessage();
    }
 
 }
@@ -141,6 +162,7 @@ void TTaskMonitorGui::ConnectDisconnect() {
 void TTaskMonitorGui::Quit(Bool_t quit) {
    if (fSocket) {
       fSocket->Send("disconnect");
+      fSocketMonitor->Remove(fSocket);
       fSocket->Close();
       delete fSocket;
       fSocket = 0;
@@ -162,9 +184,11 @@ void TTaskMonitorGui::HandleMessage(TString msgStr) {
    TMessage *msgCur;
    fSocket->Recv(msgCur);
    if (msgCur->What() == kMESS_STRING) {
+
       char str[32];
       msgCur->ReadString(str, 32);
       TString msg = str;
+      //      Printf("We have string '%s'",msg.Data());
       if (!msg.CompareTo("connected")) {
          TInetAddress adr = fSocket->GetInetAddress();
          Printf("We are connected to %s",adr.GetHostAddress());
@@ -174,6 +198,7 @@ void TTaskMonitorGui::HandleMessage(TString msgStr) {
          Quit(kFALSE);
       }
    } else if (msgCur->What() == kMESS_OBJECT) {
+      //      Printf("We have object");
       fMonMsg = (TTaskMonitorMsg*) msgCur->ReadObject(msgCur->GetClass());
       DrawMonitorWindow();
       delete fMonMsg;
@@ -186,9 +211,23 @@ void TTaskMonitorGui::DrawMonitorWindow() {
 
    if (!fMonMsg) return;
 
-   Printf("Num is %d",fMonMsg->GetNum());
+   //   Printf("DrawMonitorWindow()");
+   for(Int_t i;i<TTaskParallel::kAllTypes;i++) {
+      fLabelNumThreads[i]->SetText(fMonMsg->GetNumThreadsDone((TTaskParallel::ETaskType)i));
+   }
 
-   fLabelNumThreads[0]->SetText(fMonMsg->GetNum());
+}
 
+//_________________________________________________________________________________________________
+void TTaskMonitorGui::WaitFormInfoMessage() {
+   //   Printf("Connected.........");
+   TSocket *socket;
+   TMessage *msgCur;
+   while (1) {
+      //      Printf("fSocketMonitor->Select()");
+      socket = fSocketMonitor->Select();
+      //      Printf("After fSocketMonitor->Select()");
+      HandleMessage("");
 
+   }
 }

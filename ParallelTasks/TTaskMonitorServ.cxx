@@ -24,7 +24,8 @@ TTaskParallel(name, title),
 fServSocket(0),
 fMonitor(0),
 fSocket(0),
-fSocketInternal(0)
+fSocketInternal(0),
+fMonMsg(0)
 {
    //
    // Std constructor
@@ -43,6 +44,7 @@ TTaskMonitorServ::~TTaskMonitorServ() {
    delete fServSocket;
    delete fMonitor;
    delete fSocketInternal;
+   delete fMonMsg;
 }
 
 //_________________________________________________________________________________________________
@@ -50,6 +52,7 @@ void TTaskMonitorServ::Exec(Option_t *option) {
 
    TTaskManager *tm = TTaskManager::GetTaskManager();
    if (tm) {
+      tm->Connect("TaskCompleted(Int_t)", "TTaskMonitorServ", this, "SendMonitoringMsg(Int_t)");
       tm->Connect("FinishServingTasks()", "TTaskMonitorServ", this, "StopMonitoring()");
    }
 
@@ -100,12 +103,10 @@ void TTaskMonitorServ::Exec(Option_t *option) {
                break;
             }
             else if (!msg.CompareTo("info")) {
-               TTaskMonitorMsg *msgMon = new TTaskMonitorMsg();
-               PrepareMonitoringMessage(msgMon);
+//               PrepareMonitoringMessage(TTaskParallel::kCpu);
                TMessage message(kMESS_OBJECT);
-               message.WriteObject(msgMon);
+               message.WriteObject(fMonMsg);
                sCur->Send(message);
-               delete msgMon;
             }
             else Printf("*** Unexpected message ***");
 
@@ -129,11 +130,49 @@ void TTaskMonitorServ::StopMonitoring()
    fServSocket->Close();
 }
 
+////_________________________________________________________________________________________________
+//void TTaskMonitorServ::PrepareMonitoringMessage(TTaskParallel::ETaskType type)
+//{
+//   if (!fMonMsg) fMonMsg = new TTaskMonitorMsg();
+//   fMonMsg->IncrementThreadDone(type);
+//
+//   TList *l = fMonitor->GetListOfActives();
+//   if (l) {
+//      TIter next(l);
+//      Printf("NumConnections %d",l->GetEntries());
+//      TSocket *s;
+//      while((s = (TSocket*)next())) {
+//         if (s->IsA() == TServerSocket::Class()) continue;
+//         if (s == fSocketInternal) continue;
+//         TMessage message(kMESS_OBJECT);
+//         message.WriteObject(fMonMsg);
+//         s->Send(message);
+//      }
+//   }
+//
+//}
+
 //_________________________________________________________________________________________________
-void TTaskMonitorServ::PrepareMonitoringMessage(TTaskMonitorMsg*msg)
+void TTaskMonitorServ::SendMonitoringMsg(TTaskParallel::ETaskType type)
 {
-   msg->SetNum(4);
+   if (!fMonMsg) fMonMsg = new TTaskMonitorMsg();
+   fMonMsg->IncrementThreadDone(type);
+
+   TList *l = fMonitor->GetListOfActives();
+   if (l) {
+      TIter next(l);
+      Printf("NumConnections %d",l->GetEntries());
+      TSocket *s;
+      while((s = (TSocket*)next())) {
+         if (s->IsA() == TServerSocket::Class()) continue;
+         if (s == fSocketInternal) continue;
+         TMessage message(kMESS_OBJECT);
+         message.WriteObject(fMonMsg);
+         s->Send(message);
+      }
+   }
 }
+
 //_________________________________________________________________________________________________
 void TTaskMonitorServ::DisconnectAllClients()
 {

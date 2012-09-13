@@ -23,7 +23,7 @@ public:
 
    virtual void Exec(Option_t *option);
 
-   void TaskCompleted() { Emit("TaskCompleted()"); fDepCondition.Signal();}
+   void TaskCompleted(TTaskParallel::ETaskType type) { Emit("TaskCompleted(Int_t)",(Int_t)type); fDepCondition.Signal();}
    void FinishServingTasks() { Emit("FinishServingTasks()");}
 
    void SetParallel(Int_t num,TTaskParallel::ETaskType type=TTaskParallel::kCpu);

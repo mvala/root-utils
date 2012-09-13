@@ -30,7 +30,8 @@ public:
 
    void StopMonitoring();
 
-   void PrepareMonitoringMessage(TTaskMonitorMsg*msg);
+   void SendMonitoringMsg(TTaskParallel::ETaskType type);
+//   void PrepareMonitoringMessage(TTaskParallel::ETaskType type);
    void DisconnectAllClients();
 
 private:
@@ -39,6 +40,7 @@ private:
    TMonitor *fMonitor;
    TSocket  *fSocket;
    TSocket  *fSocketInternal;
+   TTaskMonitorMsg *fMonMsg;
 
    ClassDef(TTaskMonitorServ, 1)
 };

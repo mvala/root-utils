@@ -12,6 +12,7 @@
 
 #include <TGFrame.h>
 
+class TMonitor;
 class fSocket;
 class TTaskMonitorMsg;
 class TRootEmbeddedCanvas;
@@ -25,6 +26,8 @@ public:
 
    void ConnectDisconnect();
    void Refresh();
+   void SetConnected() {Emit("SetConnected()");}
+   void WaitFormInfoMessage();
    void Quit(Bool_t quit=kTRUE);
 
    void HandleMessage(TString msgStr);
@@ -32,8 +35,15 @@ public:
 
    TGGroupFrame *CreateInfoFrame(TGWindow *p);
 
+   void SetNumberConnectionRetry(Int_t numRetry=5) { fNumConnectRetry = numRetry;}
+   void SetServer(TString host="localhost",Int_t port=9090) {fHost=host;fPort=port;}
+
 private:
 
+   TMonitor *fSocketMonitor;
+   TString fHost;
+   Int_t fPort;
+   Int_t fNumConnectRetry;
    TSocket *fSocket;
    TTaskMonitorMsg *fMonMsg;
 

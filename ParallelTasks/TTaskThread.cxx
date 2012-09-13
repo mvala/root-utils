@@ -18,7 +18,7 @@ bool TTaskThread::runTask(TTask *task) {
    if (t->GetStatusType() == TTaskParallel::kRunning) {
       t->SetStatusType(TTaskParallel::kDone);
       TTaskManager *mgr = TTaskManager::GetTaskManager();
-      mgr->TaskCompleted();
+      mgr->TaskCompleted(t->GetType());
    }
    return true;
 }

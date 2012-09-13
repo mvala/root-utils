@@ -13,31 +13,44 @@ void MonitorGui() {
    TMessage::EnableSchemaEvolutionForAll(kTRUE);
    TMessage *msgCur;
 
+   TMonitor *mon = new TMonitor;
+   mon->Add(sock);
 
-   while (1) {
+      while (1) {
+         Printf("Select");
+   mon->Select();
+   Printf("Recv");
+//   sock->Send("disconnect");
 
-      sock->Recv(msgCur);
-      if (msgCur->What() == kMESS_STRING) {
-         char str[32];
-         msgCur->ReadString(str, 32);
-         TString msg = str;
-         if (!msg.CompareTo("connected")) {
-            TInetAddress adr = sock->GetInetAddress();
-            Printf("We are connected to %s",adr.GetHostAddress());
-         } else if (!msg.CompareTo("disconnect")) {
-            TInetAddress adr = sock->GetInetAddress();
-            Printf("Server %s was disconnected",adr.GetHostAddress());
-            break;
 
-         }
-      } else if (msgCur->What() == kMESS_OBJECT) {
-         TTaskMonitorMsg *msgMon = (TTaskMonitorMsg*) msgCur->ReadObject(msgCur->GetClass());
-         if (msgMon) Printf("Num is %d",msgMon->GetNum());
-         delete msgMon;
+   sock->Recv(msgCur);
       }
-      sock->Send("info");
-      gSystem->Sleep(1000);
-   }
+   sock->Close();
+
+
+//
+//      sock->Recv(msgCur);
+//      if (msgCur->What() == kMESS_STRING) {
+//         char str[32];
+//         msgCur->ReadString(str, 32);
+//         TString msg = str;
+//         if (!msg.CompareTo("connected")) {
+//            TInetAddress adr = sock->GetInetAddress();
+//            Printf("We are connected to %s",adr.GetHostAddress());
+//         } else if (!msg.CompareTo("disconnect")) {
+//            TInetAddress adr = sock->GetInetAddress();
+//            Printf("Server %s was disconnected",adr.GetHostAddress());
+//            break;
+//
+//         }
+//      } else if (msgCur->What() == kMESS_OBJECT) {
+//         TTaskMonitorMsg *msgMon = (TTaskMonitorMsg*) msgCur->ReadObject(msgCur->GetClass());
+//         if (msgMon) Printf("Num is %d",msgMon->GetNumThreadsDone(TTaskParallel::kCpu));
+//         delete msgMon;
+//      }
+//      sock->Send("info");
+//      gSystem->Sleep(1000);
+//   }
 
    sock->Send("disconnect");
    sock->Close();
