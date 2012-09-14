@@ -14,15 +14,20 @@
 #include <RQ_OBJECT.h>
 #include <TObjArray.h>
 
+#include "TTaskMonitorServ.h"
+
 #include "TTaskParallel.h"
 
 class TTaskMonitorServ;
+class TTaskMonitorMsg;
 class TTaskPoolManager;
 class TTaskManager : public TTaskParallel {
    RQ_OBJECT("TTaskManager")
 public:
    TTaskManager(const char *name = "TaskManager", const char *title = "Task Manager");
    virtual ~TTaskManager();
+
+   void RestoreManager();
 
    virtual void Exec(Option_t *option);
 
@@ -35,6 +40,8 @@ public:
 
    void UseMonitoring(Bool_t useMon = kTRUE) { fUseMonitoring = useMon; }
    void StartMonitoringServer();
+   TTaskMonitorMsg *GetTaskMonitor();
+
 
 private:
 
@@ -47,9 +54,7 @@ private:
 
    Bool_t fUseMonitoring;                  // flag if monitoring should be used
    TTaskPoolManager *fMonThreadPool;       // thread pool for monitoring
-   TTaskMonitorServ *fTaskMon;             // monitoring task
-
-
+   TTaskMonitorServ fTaskMon;              // monitoring task
 
    ClassDef(TTaskManager, 1)
 

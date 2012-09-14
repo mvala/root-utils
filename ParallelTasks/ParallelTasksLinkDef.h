@@ -4,6 +4,9 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+//#pragma link C++ class TThreadPoolImp+;
+//#pragma link C++ class TThreadPool+;
+
 #pragma link C++ class TTaskThread+;
 
 #pragma link C++ class TTaskParallel+;

@@ -27,6 +27,9 @@ fThreadPool(0)
 TTaskPoolManager::~TTaskPoolManager() {
    // Destructor
 
+   delete fThreadPool;
+   delete fThreadTask;
+
 }
 
 //_________________________________________________________________________________________________

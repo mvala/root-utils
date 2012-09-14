@@ -83,7 +83,7 @@ void TTaskStress::Exec(Option_t *option) {
 
    if (fType == kSleep) {
       TThread::Lock();
-      UInt_t time = (UInt_t) r.Uniform(10000);
+      UInt_t time = (UInt_t) r.Gaus(5000,1000);
       TThread::UnLock();
       Printf("[%s]%s%s S (%ld)", option,prefix.Data(), GetName(), time);
       gSystem->Sleep(time);

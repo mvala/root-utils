@@ -25,7 +25,7 @@ fServSocket(0),
 fMonitor(0),
 fSocket(0),
 fSocketInternal(0),
-fMonMsg(0)
+fMonMsg()
 {
    //
    // Std constructor
@@ -44,7 +44,6 @@ TTaskMonitorServ::~TTaskMonitorServ() {
    delete fServSocket;
    delete fMonitor;
    delete fSocketInternal;
-   delete fMonMsg;
 }
 
 //_________________________________________________________________________________________________
@@ -84,14 +83,9 @@ void TTaskMonitorServ::Exec(Option_t *option) {
             // sending 'connected' string
             sServCur->Send("connected");
             Printf("We sent 'connected' message");
-            if (!fMonMsg) {
-               fMonMsg = new TTaskMonitorMsg();
-               fMonMsg->Reset();
                TMessage message(kMESS_OBJECT);
-               message.WriteObject(fMonMsg);
+               message.WriteObject(&fMonMsg);
                sServCur->Send(message);
-            }
-
 
          }
       } else {
@@ -112,7 +106,7 @@ void TTaskMonitorServ::Exec(Option_t *option) {
             }
             else if (!msg.CompareTo("info")) {
                TMessage message(kMESS_OBJECT);
-               message.WriteObject(fMonMsg);
+               message.WriteObject(&fMonMsg);
                sCur->Send(message);
             }
             else Printf("*** Unexpected message ***");
@@ -143,20 +137,16 @@ void TTaskMonitorServ::SendMonitoringMsg(Int_t val,Int_t val2)
 
 
    TThread::Lock();
-   if (!fMonMsg) fMonMsg = new TTaskMonitorMsg();
-   fMonMsg->IncrementThread((TTaskParallel::ETaskType)val,(TTaskParallel::ETaskStatusType)val2);
    if (!fMonitor) return;
    TList *l = fMonitor->GetListOfActives();
    if (l) {
       TIter next(l);
-//      Printf("NumConnections %d",l->GetEntries());
       TSocket *s;
       while((s = (TSocket*)next())) {
          if (s->IsA() == TServerSocket::Class()) continue;
          if (s == fSocketInternal) continue;
          TMessage message(kMESS_OBJECT);
-         message.WriteObject(fMonMsg);
-//         Printf("Sending ...");
+         message.WriteObject(&fMonMsg);
          s->Send(message);
       }
    }

@@ -10,11 +10,16 @@ void MainRun(TString macro="",TString projectDir="") {
    gSystem->Load("libParallelTasks.so");
    gSystem->Load("libCutSet.so");
    gSystem->Load("libProof.so");
+   gSystem->Load("libProofBench.so");
    gSystem->Load("libPeacUtils.so");
+   gSystem->Load("libAnalysis.so");
+   gSystem->Load("libEventAnalysis.so");
 
    gSystem->AddIncludePath(TString::Format("-I%sParallelTasks",projectDir.Data()).Data());
    gSystem->AddIncludePath(TString::Format("-I%sCutSet",projectDir.Data()).Data());
    gSystem->AddIncludePath(TString::Format("-I%sPeacUtils",projectDir.Data()).Data());
+   gSystem->AddIncludePath(TString::Format("-I%sAnalysis",projectDir.Data()).Data());
+   gSystem->AddIncludePath(TString::Format("-I%sEventAnalysis",projectDir.Data()).Data());
 
    TStopwatch timer;
    timer.Start();

@@ -31,7 +31,7 @@ fIsAllAssigned(kFALSE),
 fDepCondition(),
 fUseMonitoring(kFALSE),
 fMonThreadPool(0),
-fTaskMon(0)
+fTaskMon("monServ","Task Monitor Serv")
 {
    // Std constructor
 
@@ -46,38 +46,48 @@ fTaskMon(0)
 TTaskManager::~TTaskManager() {
    // Destructor
 
-   fTaskThreadPools->Delete();
+   if (fTaskThreadPools) fTaskThreadPools->Delete();
    delete fTaskThreadPools;
    delete fMonThreadPool;
-   delete fTaskMon;
 }
 
 //_________________________________________________________________________________________________
 void TTaskManager::Exec(Option_t *option) {
    // Exec of manager task
 
-   if (!fParent) {
 
-      if (fUseMonitoring) StartMonitoringServer();
+   TTaskPoolManager *tpm;
+   if (!fParent) {
+      if (!fTaskThreadPools || fTaskThreadPools->GetEntries()==0) {
+
+      TThread::Lock();
+      if (fUseMonitoring) {
+         if (!fMonThreadPool) fMonThreadPool =  new TTaskPoolManager(1);
+         StartMonitoringServer();
+
+      }
 
       // We are SuperManager and we do Init
-      fTaskThreadPools = new TObjArray();
+      if (!fTaskThreadPools) fTaskThreadPools = new TObjArray();
       for (Int_t i=0; i<kAllTypes; i++) {
          fTaskThreadPools->Add(new TTaskPoolManager(fNumOfThreads[i]));
       }
-   }
 
-   TTaskPoolManager *tpm;
-   for (Int_t i=0; i<kAllTypes; i++) {
-      tpm = (TTaskPoolManager *) fTaskThreadPools->At(i);
-      tpm->Print();
+      for (Int_t i=0; i<kAllTypes; i++) {
+         tpm = (TTaskPoolManager *) fTaskThreadPools->At(i);
+//         tpm->Print();
+      }
+
+      TThread::UnLock();
+      }
+
    }
 
    // Loops until not all tasks are assigned
    Int_t counter=0;
    while (1) {
       TThread::Lock();
-      Printf("Manager loop %d",counter++);
+//      Printf("Manager loop %d",counter++);
       SetAllAssigned();
       RunTask(option);
       TThread::UnLock();
@@ -88,9 +98,11 @@ void TTaskManager::Exec(Option_t *option) {
    // waiting for tasks to finish
    for (Int_t i=0; i<kAllTypes; i++) {
       tpm = (TTaskPoolManager *) fTaskThreadPools->At(i);
-      if (i == TTaskParallel::kFake) FinishServingTasks();
+      //      if (i == TTaskParallel::kFake) FinishServingTasks();
       tpm->Stop(kTRUE);
    }
+
+   FinishServingTasks();
 
    TIter next(fTaskThreadPools);
    TTaskPoolManager *pool;
@@ -101,7 +113,7 @@ void TTaskManager::Exec(Option_t *option) {
    // sync monitoring
    if (fUseMonitoring) fMonThreadPool->Stop(kTRUE);
 
-   Printf("Done");
+//   Printf("Done");
 }
 
 //_________________________________________________________________________________________________
@@ -130,7 +142,6 @@ void TTaskManager::TaskStatusChanged(Int_t type,Int_t status){
    val[0] = (Long_t)type;
    val[1] = (Long_t)status;
    Emit("TaskStatusChanged(Int_t,Int_t)",val);
-
    if (status == (Int_t)TTaskParallel::kDone) {
       fDepCondition.Signal();
    }
@@ -139,7 +150,31 @@ void TTaskManager::TaskStatusChanged(Int_t type,Int_t status){
 //_________________________________________________________________________________________________
 void TTaskManager::StartMonitoringServer() {
 
-   fMonThreadPool =  new TTaskPoolManager(1);
-   if (!fTaskMon) fTaskMon = new TTaskMonitorServ("monServ","Task Monitor Serv");
-   fMonThreadPool->PushTask(fTaskMon);
+   if (!fMonThreadPool) fMonThreadPool =  new TTaskPoolManager(1);
+//   if (!fTaskMon) fTaskMon = new TTaskMonitorServ("monServ","Task Monitor Serv");
+   fMonThreadPool->PushTask(&fTaskMon);
+}
+
+//_________________________________________________________________________________________________
+TTaskMonitorMsg *TTaskManager::GetTaskMonitor() {
+   if (!fMonThreadPool) fMonThreadPool =  new TTaskPoolManager(1);
+//   if (!fTaskMon) fTaskMon = new TTaskMonitorServ("monServ","Task Monitor Serv");
+   return fTaskMon.GetMonMsg();
+}
+
+//_________________________________________________________________________________________________
+void TTaskManager::RestoreManager() {
+
+   TThread::Lock();
+   SetStatusType(TTaskParallel::kWaiting,kTRUE);
+
+
+   // TMP fix for reusing threadPools
+   fTaskThreadPools->Delete();
+//   delete fTaskThreadPools;
+//   fTaskThreadPools = 0;
+//
+//   delete fMonThreadPool;
+//   fMonThreadPool=0;
+   TThread::UnLock();
 }

@@ -13,6 +13,7 @@ public:
    virtual ~TTaskMonitorMsg();
 
    void Reset();
+   virtual void Print(Option_t *option = "") const;
 
    void IncrementThread(TTaskParallel::ETaskType type,TTaskParallel::ETaskStatusType status) { fNumberOfThreads[type][status]++;}
    Int_t GetNumThreads(TTaskParallel::ETaskType type,TTaskParallel::ETaskStatusType status) { return fNumberOfThreads[type][status];}

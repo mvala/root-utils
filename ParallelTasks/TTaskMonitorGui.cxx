@@ -189,6 +189,7 @@ void TTaskMonitorGui::HandleMessage(TString msgStr) {
    if (!msgStr.IsNull()) fSocket->Send(msgStr.Data());
    TMessage *msgCur;
    fSocket->Recv(msgCur);
+   if (!msgCur) return;
    if (msgCur->What() == kMESS_STRING) {
 
       char str[32];

@@ -110,15 +110,18 @@ void TTaskParallel::RunTask(Option_t *option,TTaskParallel::ETaskType type) {
    while ((task = (TTask *) next())) {
       if (!task->IsActive()) continue;
       t = (TTaskParallel *) task;
+//      Printf("Testing %s [%s]",t->GetName(),t->GetStatusTypeName());
       if (t->GetStatusType() == TTaskParallel::kWaiting) {
          if (t->HasDependency()) {
             // task was not assigned
             taskMgr->SetAllAssigned(kFALSE);
          } else {
             t->SetStatusType(TTaskParallel::kAssigned);
+//            Printf("Pushing task %s [%s]",t->GetName(),t->GetStatusTypeName());
             taskMgr->PushTask(t);
          }
       }
+//      gSystem->Sleep(100);
       t->RunTask(option);
    }
 
@@ -134,6 +137,19 @@ Bool_t TTaskParallel::HasDependency() {
 
    return kFALSE;
 }
+
+//_________________________________________________________________________________________________
+void TTaskParallel::SetStatusType(ETaskStatusType t,Bool_t recursivly) {
+   fTaskStatusType = t;
+   if (recursivly) {
+      TIter next(fTasks);
+      TTaskParallel*task;
+      while ((task = (TTaskParallel*)next())) {
+         task->SetStatusType(t,recursivly);
+      }
+   }
+}
+
 //_________________________________________________________________________________________________
 const char *TTaskParallel::GetStatusTypeName(ETaskStatusType t) {
 
@@ -148,8 +164,9 @@ const char *TTaskParallel::GetStatusTypeName(ETaskStatusType t) {
       return "DS";
    case kDone:
       return "D";
+   default:
+      return "";
    }
-
    return "";
 }
 
@@ -163,6 +180,8 @@ const char *TTaskParallel::GetTypeName(ETaskType t) {
       return "IO";
    case kFake:
       return "FAKE";
+   default:
+      return "";
    }
    return "";
 }

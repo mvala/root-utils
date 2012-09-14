@@ -1,6 +1,8 @@
 Int_t SETUP(TList *input = 0) {
   
   if (gSystem->Load("libThread.so")<0) return 1;
+  if (gSystem->Load("libGui.so")<0) return 1;
+  if (gSystem->Load("libNet.so")<0) return 1;
   if (gSystem->Load("libParallelTasks.so")<0) return 1;
   
   // Set the include paths

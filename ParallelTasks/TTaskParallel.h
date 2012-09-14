@@ -34,7 +34,7 @@ public:
    TTask *GetParent() { return fParent;}
    void SetParent(TTask *task) { fParent = task; }
 
-   void SetStatusType(ETaskStatusType t) { fTaskStatusType = t;}
+   void SetStatusType(ETaskStatusType t,Bool_t recursivly=kFALSE);
    void SetType(ETaskType t) { fTaskType = t;}
 
    const char *GetStatusTypeName(ETaskStatusType t);

@@ -12,8 +12,11 @@ MY_RUN_DIR=$PROJECT_DIR/run/${1/.C/}
 rm -Rf $MY_RUN_DIR
 mkdir -p $MY_RUN_DIR
 
-cd $MY_RUN_DIR
-cp $PROJECT_DIR/$1 .
 MACRO=$(basename $1)
+MACRO_DIR=$(dirname $1)
+
+cd $MY_RUN_DIR
+cp -r $PROJECT_DIR/$MACRO_DIR/* .
+cp -r $PROJECT_DIR/pars .
 root -l $PROJECT_DIR/macros/MainRun.C'("'$MACRO'","'$PROJECT_DIR/'")'
 cd $MY_PWD

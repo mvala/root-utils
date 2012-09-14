@@ -12,6 +12,8 @@ add_custom_target(par-all)
 add_subdirectory(ParallelTasks)
 add_subdirectory(CutSet)
 add_subdirectory(PeacUtils)
+add_subdirectory(Analysis)
+add_subdirectory(EventAnalysis)
 
 include(CPack)
 

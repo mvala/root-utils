@@ -3,9 +3,9 @@ include Makefile.arch
 
 PACKAGE = PeacUtils
 
-default-target: lib$(PACKAGE).so
+$(PACKAGE): lib$(PACKAGE).so
 
-ALICEINC      = -I.
+EXTRAINC      = -I.
 
 ifeq ($(PLATFORM),macosx)
 ROOTLIBDIR     := $(shell $(RC) --libdir)
@@ -18,7 +18,7 @@ ifeq ($(CHECKXML),yes)
   CINTFLAGS += -DWITHXML
 endif
 
-CXXFLAGS += $(ALICEINC) -g
+CXXFLAGS += $(EXTRAINC) -g
 
 SRCS = TPeacVerifierSel.cxx
 HDRS = TPeacVerifierSel.h
@@ -51,7 +51,7 @@ clean:
 
 G__$(PACKAGE).cxx G__$(PACKAGE).h: $(HDRS) $(DHDR)
 	@echo "Generating dictionary ..."
-	rootcint -f $@ -c $(CINTFLAGS) $(ALICEINC) $^
+	rootcint -f $@ -c $(CINTFLAGS) $(EXTRAINC) $^
 
 ### CREATE PAR FILE
 

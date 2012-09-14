@@ -12,12 +12,13 @@
 
 #include <RQ_OBJECT.h>
 
+#include "TTaskMonitorMsg.h"
+
 #include "TTaskParallel.h"
 
 class TServerSocket;
 class TMonitor;
 class TSocket;
-class TTaskMonitorMsg;
 class TTaskMonitorServ : public TTaskParallel {
 
    RQ_OBJECT("TTaskMonitorServ")
@@ -33,13 +34,15 @@ public:
    void SendMonitoringMsg(Int_t val,Int_t val2);
    void DisconnectAllClients();
 
+   TTaskMonitorMsg *GetMonMsg() { return &fMonMsg; }
+
 private:
 
    TServerSocket *fServSocket;
    TMonitor *fMonitor;
    TSocket  *fSocket;
    TSocket  *fSocketInternal;
-   TTaskMonitorMsg *fMonMsg;
+   TTaskMonitorMsg fMonMsg;
 
    ClassDef(TTaskMonitorServ, 1)
 };

@@ -3,9 +3,9 @@ include Makefile.arch
 
 PACKAGE = ParallelTasks
 
-default-target: lib$(PACKAGE).so
+$(PACKAGE): lib$(PACKAGE).so
 
-ALICEINC      = -I.
+EXTRAINC      = -I.
 
 ifeq ($(PLATFORM),macosx)
 ROOTLIBDIR     := $(shell $(RC) --libdir)
@@ -18,7 +18,7 @@ ifeq ($(CHECKXML),yes)
   CINTFLAGS += -DWITHXML
 endif
 
-CXXFLAGS += $(ALICEINC) -g
+CXXFLAGS += $(EXTRAINC) -g
 
 SRCS = TTaskThread.cxx TTaskPoolManager.cxx TTaskParallel.cxx TTaskManager.cxx TTaskStress.cxx TTaskMonitorMsg.cxx TTaskMonitorServ.cxx TTaskMonitorGui.cxx
 HDRS = TTaskThread.h TTaskPoolManager.h TTaskParallel.h TTaskManager.h TTaskStress.h TTaskMonitorMsg.h TTaskMonitorServ.h TTaskMonitorGui.h
@@ -51,7 +51,7 @@ clean:
 
 G__$(PACKAGE).cxx G__$(PACKAGE).h: $(HDRS) $(DHDR)
 	@echo "Generating dictionary ..."
-	rootcint -f $@ -c $(CINTFLAGS) $(ALICEINC) $^
+	rootcint -f $@ -c $(CINTFLAGS) $(EXTRAINC) $^
 
 ### CREATE PAR FILE
 
