@@ -21,7 +21,7 @@ void TestTaskManagerSimple() {
    useDeps = kTRUE;
 
    // using monitoring
-   taskMgr->UseMonitoring();
+   //   taskMgr->UseMonitoring();
 
    TTaskStress *task1, *task2;
    TTaskStress::EStressType stressType = TTaskStress::kSleep;
@@ -29,7 +29,7 @@ void TestTaskManagerSimple() {
    TTaskStress::EStressType stressType2 = TTaskStress::kSleep;
    //   stressType2 = TTaskStress::kCpu;
 
-   Int_t nTasks = 10;
+   Int_t nTasks = 2;
    Int_t nSubTasks = 3;
    Int_t depTaskEvery = 4;
    for (Int_t i = 1; i <= nTasks; i++) {
@@ -105,8 +105,11 @@ void TestTaskManagerSimple() {
    //
    //
 
-   taskMgr->Exec("");
-   taskMgr->RestoreManager();
-   Printf("Exec2");
-   taskMgr->Exec("");
+   Int_t nExec = 2;
+   for (Int_t iExec = 0; iExec < nExec; iExec++) {
+      taskMgr->Exec("");
+//      taskMgr->RestoreManager();
+      //   Printf("Sleeping");
+//         gSystem->Sleep(1000);
+   }
 }

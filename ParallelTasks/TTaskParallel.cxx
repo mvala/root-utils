@@ -74,7 +74,7 @@ void TTaskParallel::Add(TTask *task) {
 
    if (!task) return;
 
-   //   Printf("Adding Task %s (parent=%s)",task->GetName(),GetName());
+   Printf("Adding Task %s (parent=%s)", task->GetName(), GetName());
    fTasks->Add(task);
    TTaskParallel *tp = (TTaskParallel *) task;
    tp->SetParent(this);
@@ -105,6 +105,9 @@ void TTaskParallel::Exec(Option_t *option) {
 //_________________________________________________________________________________________________
 void TTaskParallel::RunTask(Option_t *option, TTaskParallel::ETaskType type) {
 
+
+   if (!fTasks) return;
+
    TIter next(fTasks);
    TTask *task;
    TTaskParallel *t;
@@ -112,14 +115,14 @@ void TTaskParallel::RunTask(Option_t *option, TTaskParallel::ETaskType type) {
    while ((task = (TTask *) next())) {
       if (!task->IsActive()) continue;
       t = (TTaskParallel *) task;
-//      Printf("Testing %s [%s]",t->GetName(),t->GetStatusTypeName());
+      Printf("Testing %s [%s] %p", t->GetName(), t->GetStatusTypeName(), t->GetParent());
       if (t->GetStatusType() == TTaskParallel::kWaiting) {
          if (t->HasDependency()) {
             // task was not assigned
             taskMgr->SetAllAssigned(kFALSE);
          } else {
             t->SetStatusType(TTaskParallel::kAssigned);
-//            Printf("Pushing task %s [%s]",t->GetName(),t->GetStatusTypeName());
+            Printf("Pushing task %s [%s]", t->GetName(), t->GetStatusTypeName());
             taskMgr->PushTask(t);
          }
       }

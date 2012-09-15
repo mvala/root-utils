@@ -54,25 +54,28 @@ TTaskManager::~TTaskManager() {
 void TTaskManager::Exec(Option_t *option) {
    // Exec of manager task
 
-   if (!fParent) {
-      TTaskPoolManager *tpm;
-      TLockGuard lock(&fMutex);
-      if (!fTaskThreadPools || fTaskThreadPools->GetEntries() == 0) {
-         if (fUseMonitoring) {
-            if (!fMonThreadPool) fMonThreadPool =  new TTaskPoolManager(1);
-            StartMonitoringServer();
-         }
-         // We are SuperManager and we do Init
-         if (!fTaskThreadPools) fTaskThreadPools = new TObjArray();
-         for (Int_t i = 0; i < kAllTypes; i++) {
-            fTaskThreadPools->Add(new TTaskPoolManager(fNumOfThreads[i]));
-         }
+   Printf("TTaskManager::Exec START ...");
 
-         for (Int_t i = 0; i < kAllTypes; i++) {
-            tpm = (TTaskPoolManager *) fTaskThreadPools->At(i);
-            tpm->Print();
-         }
+   if (!fParent && !fTaskThreadPools) {
+
+      Printf("TTaskManager::SHouldBeInit ...");
+      TLockGuard lock(&fMutex);
+      TTaskPoolManager *tpm;
+      fTaskThreadPools = new TObjArray();
+
+      if (fUseMonitoring) {
+         if (!fMonThreadPool) fMonThreadPool =  new TTaskPoolManager(1);
+         StartMonitoringServer();
       }
+
+      // We are SuperManager and we do Init
+      Int_t i;
+      for (i = 0; i < kAllTypes; i++) {
+         tpm = new TTaskPoolManager(fNumOfThreads[i]);
+         fTaskThreadPools->Add(tpm);
+         tpm->Print();
+      }
+
    }
 
    // Loops until not all tasks are assigned
@@ -91,22 +94,22 @@ void TTaskManager::Exec(Option_t *option) {
    while ((pool = (TTaskPoolManager *)next())) {
       pool->Stop(kTRUE);
    }
+   //
+   //////      TODO Serving tasks
+   ////      FinishServingTasks();
+   ////
+   // wait untill serving task are are finished
+   next.Reset();
+   while ((pool = (TTaskPoolManager *)next())) {
+      pool->Stop(kTRUE);
+   }
+   //
+   //   // sync monitoring
+   //   if (fUseMonitoring) fMonThreadPool->Stop(kTRUE);
+   //
+   if (!fParent) RestoreManager();
 
-//   TODO Serving tasks
-//   FinishServingTasks();
-//
-//   // wait untill serving task are are finished
-//   next.Reset();
-//   while ((pool = (TTaskPoolManager *)next())) {
-//      pool->Stop(kTRUE);
-//   }
-
-   // sync monitoring
-   if (fUseMonitoring) fMonThreadPool->Stop(kTRUE);
-
-   RestoreManager();
-
-   //   Printf("Done");
+   Printf("Done");
 }
 
 //_________________________________________________________________________________________________
@@ -156,22 +159,24 @@ TTaskMonitorMsg *TTaskManager::GetTaskMonitor() {
 //_________________________________________________________________________________________________
 void TTaskManager::RestoreManager() {
 
-   TThread::Lock();
+   TLockGuard lock(&fMutex);
    SetStatusType(TTaskParallel::kWaiting, kTRUE);
-
    TIter next(fTaskThreadPools);
    TTaskPoolManager *pool;
+   Printf("Restore Manager Pools %lld %s", fTaskThreadPools->GetEntries(), GetName());
    while ((pool = (TTaskPoolManager *)next())) {
-      pool->Stop(kFALSE, kTRUE);
+      pool->SetStop(kFALSE);
    }
 
 
+   //   Printf("Main Task Manager sleeping ");
+   //   gSystem->Sleep(5000);
+
    // TMP fix for reusing threadPools
-   fTaskThreadPools->Delete();
+   //   fTaskThreadPools->Delete();
    //   delete fTaskThreadPools;
    //   fTaskThreadPools = 0;
    //
    //   delete fMonThreadPool;
    //   fMonThreadPool=0;
-   TThread::UnLock();
 }

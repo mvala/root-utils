@@ -34,7 +34,8 @@ TTaskPoolManager::~TTaskPoolManager() {
 
 //_________________________________________________________________________________________________
 void TTaskPoolManager::Init() {
-   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kFALSE);
+//   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kFALSE);
+   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kTRUE);
    if (!fThreadTask) fThreadTask = new TTaskThread();
 }
 
@@ -48,13 +49,5 @@ void TTaskPoolManager::Print(Option_t *option) const {
 void TTaskPoolManager::PushTask(TTaskParallel *t) {
 
    fThreadPool->PushTask(*fThreadTask, t);
-}
-
-//_________________________________________________________________________________________________
-void TTaskPoolManager::Stop(Bool_t wait, Bool_t stop) {
-
-   if (stop) { fThreadPool->SetStop(stop); }
-   else fThreadPool->Stop(wait);
-
 }
 

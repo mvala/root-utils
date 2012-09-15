@@ -24,7 +24,9 @@ public:
    virtual void Print(Option_t *option = "") const;
 
    void PushTask(TTaskParallel *t);
-   void Stop(Bool_t wait = kFALSE, Bool_t stop = kFALSE);
+   void Stop(Bool_t wait = kFALSE) { fThreadPool->Stop(wait); }
+
+   void SetStop(Bool_t stop = kFALSE) { fThreadPool->SetStop(stop); }
 
 private:
 
