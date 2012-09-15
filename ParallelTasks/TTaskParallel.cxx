@@ -115,14 +115,14 @@ void TTaskParallel::RunTask(Option_t *option, TTaskParallel::ETaskType type) {
    while ((task = (TTask *) next())) {
       if (!task->IsActive()) continue;
       t = (TTaskParallel *) task;
-      Printf("Testing %s [%s] %p", t->GetName(), t->GetStatusTypeName(), t->GetParent());
+//      Printf("Testing %s [%s] %p", t->GetName(), t->GetStatusTypeName(), t->GetParent());
       if (t->GetStatusType() == TTaskParallel::kWaiting) {
          if (t->HasDependency()) {
             // task was not assigned
             taskMgr->SetAllAssigned(kFALSE);
          } else {
             t->SetStatusType(TTaskParallel::kAssigned);
-            Printf("Pushing task %s [%s]", t->GetName(), t->GetStatusTypeName());
+//            Printf("Pushing task %s [%s]", t->GetName(), t->GetStatusTypeName());
             taskMgr->PushTask(t);
          }
       }

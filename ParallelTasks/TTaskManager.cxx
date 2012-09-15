@@ -54,7 +54,7 @@ TTaskManager::~TTaskManager() {
 void TTaskManager::Exec(Option_t *option) {
    // Exec of manager task
 
-   Printf("TTaskManager::Exec START ...");
+//   Printf("TTaskManager::Exec START ...");
 
    if (!fParent && !fTaskThreadPools) {
 
@@ -73,7 +73,7 @@ void TTaskManager::Exec(Option_t *option) {
       for (i = 0; i < kAllTypes; i++) {
          tpm = new TTaskPoolManager(fNumOfThreads[i]);
          fTaskThreadPools->Add(tpm);
-         tpm->Print();
+//         tpm->Print();
       }
 
    }
@@ -82,7 +82,7 @@ void TTaskManager::Exec(Option_t *option) {
    Int_t counter = 0;
    while (1) {
       TLockGuard lock(&fMutex);
-      Printf("Manager loop %d", counter++);
+//      Printf("Manager loop %d", counter++);
       SetAllAssigned();
       RunTask(option);
       if (fIsAllAssigned) break;
@@ -92,24 +92,24 @@ void TTaskManager::Exec(Option_t *option) {
    TIter next(fTaskThreadPools);
    TTaskPoolManager *pool;
    while ((pool = (TTaskPoolManager *)next())) {
-      pool->Stop(kTRUE);
+      pool->Stop(kTRUE,kTRUE);
    }
    //
    //////      TODO Serving tasks
    ////      FinishServingTasks();
    ////
    // wait untill serving task are are finished
-   next.Reset();
-   while ((pool = (TTaskPoolManager *)next())) {
-      pool->Stop(kTRUE);
-   }
+//   next.Reset();
+//   while ((pool = (TTaskPoolManager *)next())) {
+//      pool->Stop(kTRUE);
+//   }
    //
    //   // sync monitoring
    //   if (fUseMonitoring) fMonThreadPool->Stop(kTRUE);
    //
    if (!fParent) RestoreManager();
 
-   Printf("Done");
+//   Printf("Done");
 }
 
 //_________________________________________________________________________________________________
@@ -159,14 +159,15 @@ TTaskMonitorMsg *TTaskManager::GetTaskMonitor() {
 //_________________________________________________________________________________________________
 void TTaskManager::RestoreManager() {
 
-   TLockGuard lock(&fMutex);
+   TThread::Lock();
    SetStatusType(TTaskParallel::kWaiting, kTRUE);
-   TIter next(fTaskThreadPools);
-   TTaskPoolManager *pool;
-   Printf("Restore Manager Pools %lld %s", fTaskThreadPools->GetEntries(), GetName());
-   while ((pool = (TTaskPoolManager *)next())) {
-      pool->SetStop(kFALSE);
-   }
+   TThread::UnLock();
+//   TIter next(fTaskThreadPools);
+//   TTaskPoolManager *pool;
+//   Printf("Restore Manager Pools %lld %s", fTaskThreadPools->GetEntries(), GetName());
+//   while ((pool = (TTaskPoolManager *)next())) {
+//      pool->SetStop(kFALSE);
+//   }
 
 
    //   Printf("Main Task Manager sleeping ");

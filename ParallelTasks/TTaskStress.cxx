@@ -82,12 +82,13 @@ void TTaskStress::Exec(Option_t *option) {
 
 
    if (fType == kSleep) {
-      TThread::Lock();
+//      TThread::Lock();
       UInt_t time = (UInt_t) r.Gaus(5000, 1000);
-      TThread::UnLock();
-      Printf("[%s]%s%s S (%ld)", option, prefix.Data(), GetName(), time);
+      time = 1;
+//      TThread::UnLock();
+//      Printf("[%s]%s%s S (%ld)", option, prefix.Data(), GetName(), time);
       gSystem->Sleep(time);
-      Printf("[%s]%s%s D (%ld)", option, prefix.Data(), GetName(), time);
+//      Printf("[%s]%s%s D (%ld)", option, prefix.Data(), GetName(), time);
    } else if (fType == kCpu) {
       TH1D h(TString::Format("myTaskStress_%s", GetName()).Data(), "My Stress task hist", 100, -10, 10);
       h.SetDirectory(0);

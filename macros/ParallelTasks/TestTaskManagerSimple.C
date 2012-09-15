@@ -29,7 +29,7 @@ void TestTaskManagerSimple() {
    TTaskStress::EStressType stressType2 = TTaskStress::kSleep;
    //   stressType2 = TTaskStress::kCpu;
 
-   Int_t nTasks = 2;
+   Int_t nTasks = 10;
    Int_t nSubTasks = 3;
    Int_t depTaskEvery = 4;
    for (Int_t i = 1; i <= nTasks; i++) {
@@ -105,11 +105,12 @@ void TestTaskManagerSimple() {
    //
    //
 
-   Int_t nExec = 2;
+   Int_t nExec = 10000;
    for (Int_t iExec = 0; iExec < nExec; iExec++) {
+      if (iExec%100==0) Printf("Exec %d",iExec);
       taskMgr->Exec("");
 //      taskMgr->RestoreManager();
-      //   Printf("Sleeping");
-//         gSystem->Sleep(1000);
+
+//         gSystem->Sleep(5000);
    }
 }

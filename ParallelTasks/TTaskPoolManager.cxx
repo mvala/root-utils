@@ -34,8 +34,8 @@ TTaskPoolManager::~TTaskPoolManager() {
 
 //_________________________________________________________________________________________________
 void TTaskPoolManager::Init() {
-//   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kFALSE);
-   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kTRUE);
+   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kFALSE);
+//   if (!fThreadPool) fThreadPool = new TThreadPool<TTaskThread, TTask *>(fNumThreads, kTRUE);
    if (!fThreadTask) fThreadTask = new TTaskThread();
 }
 
