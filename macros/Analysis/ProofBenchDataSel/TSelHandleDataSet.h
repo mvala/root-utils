@@ -40,7 +40,7 @@ private:
    void CheckCache(const char *fn);
    void RemoveFile(const char *fn);
    void CopyFile(const char *fn);
-   
+
 public :
 
    TSelHandleDataSet() : fType(0) { }
@@ -58,7 +58,7 @@ public :
    virtual void    SlaveTerminate() { }
    virtual void    Terminate() { }
 
-   ClassDef(TSelHandleDataSet,0)     //PROOF selector for event file generation
+   ClassDef(TSelHandleDataSet, 0)    //PROOF selector for event file generation
 };
 
 #endif

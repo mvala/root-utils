@@ -21,13 +21,13 @@ public:
    TCutSet(const char *name = "cutSet", const char *title = "Cut Set Title");
    virtual ~TCutSet();
 
-   TCutSet&    operator=(const TCutSet& rhs);
-   TCutSet&    operator=(const char *rhs);
+   TCutSet    &operator=(const TCutSet &rhs);
+   TCutSet    &operator=(const char *rhs);
 
-   void AddCut(TCutObj*cut);
-   void AddCut(TCutObj&cut);
+   void AddCut(TCutObj *cut);
+   void AddCut(TCutObj &cut);
 
-   virtual Bool_t IsSelected(TObject*obj);
+   virtual Bool_t IsSelected(TObject *obj);
 
    TFormula *GetFormula() { return fFormula; }
 

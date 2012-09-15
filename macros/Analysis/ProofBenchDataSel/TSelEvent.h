@@ -55,11 +55,11 @@ private:
 
    TPBReadType *fReadType;       //read type
    Bool_t fDebug;                             //debug switch
-   TCanvas* fCHist;                           //canvas to display histograms
+   TCanvas *fCHist;                           //canvas to display histograms
 
    //Output hists
-   TH1F* fPtHist;
-   TH1F* fNTracksHist;
+   TH1F *fPtHist;
+   TH1F *fNTracksHist;
 
 public :
 
@@ -126,12 +126,12 @@ public :
    virtual void    Terminate();
 
    TPBReadType *GetReadType() {return fReadType;}
-   Bool_t GetDebug(){return fDebug;}
-   TCanvas* GetCHist(){return fCHist;}
-   TH1F* GetPtHist(){return fPtHist;}
-   TH1F* GetNTracksHist(){return fNTracksHist;}
+   Bool_t GetDebug() {return fDebug;}
+   TCanvas *GetCHist() {return fCHist;}
+   TH1F *GetPtHist() {return fPtHist;}
+   TH1F *GetNTracksHist() {return fNTracksHist;}
 
-   ClassDef(TSelEvent,0) //PROOF selector for I/O-intensive benchmark test
+   ClassDef(TSelEvent, 0) //PROOF selector for I/O-intensive benchmark test
 };
 
 #endif
@@ -146,35 +146,35 @@ void TSelEvent::Init(TTree *tree)
    // Init() will be called many times when running with PROOF.
 
    // Set branch addresses
-   fEventName=0;
-   fTracks=0;
-   fHighPt=0;
-   fMuons=0;
-   fH=0;
+   fEventName = 0;
+   fTracks = 0;
+   fHighPt = 0;
+   fMuons = 0;
+   fH = 0;
 
    if (tree == 0) return;
    fChain = tree;
    fChain->SetMakeClass(1);
 
-   fChain->SetBranchAddress("fType[20]",fType);
-   fChain->SetBranchAddress("fEventName",fEventName);
-   fChain->SetBranchAddress("fNtrack",&fNtrack);
-   fChain->SetBranchAddress("fNseg",&fNseg);
-   fChain->SetBranchAddress("fNvertex",&fNvertex);
-   fChain->SetBranchAddress("fFlag",&fFlag);
-   fChain->SetBranchAddress("fTemperature",&fTemperature);
-   fChain->SetBranchAddress("fMeasures[10]",fMeasures);
-   fChain->SetBranchAddress("fMatrix[4][4]",fMatrix);
-   fChain->SetBranchAddress("fClosestDistance",fClosestDistance);
-   fChain->SetBranchAddress("fEvtHdr",&fEvtHdr);
-   fChain->SetBranchAddress("fTracks",&fTracks);
-   fChain->SetBranchAddress("fHighPt",&fHighPt);
-   fChain->SetBranchAddress("fMuons",&fMuons);
-   fChain->SetBranchAddress("fLastTrack",&fLastTrack);
-   fChain->SetBranchAddress("fWebHistogram",&fWebHistogram);
-   fChain->SetBranchAddress("fH",&fH);
-   fChain->SetBranchAddress("fTriggerBits",&fTriggerBits);
-   fChain->SetBranchAddress("fIsValid",&fIsValid);
+   fChain->SetBranchAddress("fType[20]", fType);
+   fChain->SetBranchAddress("fEventName", fEventName);
+   fChain->SetBranchAddress("fNtrack", &fNtrack);
+   fChain->SetBranchAddress("fNseg", &fNseg);
+   fChain->SetBranchAddress("fNvertex", &fNvertex);
+   fChain->SetBranchAddress("fFlag", &fFlag);
+   fChain->SetBranchAddress("fTemperature", &fTemperature);
+   fChain->SetBranchAddress("fMeasures[10]", fMeasures);
+   fChain->SetBranchAddress("fMatrix[4][4]", fMatrix);
+   fChain->SetBranchAddress("fClosestDistance", fClosestDistance);
+   fChain->SetBranchAddress("fEvtHdr", &fEvtHdr);
+   fChain->SetBranchAddress("fTracks", &fTracks);
+   fChain->SetBranchAddress("fHighPt", &fHighPt);
+   fChain->SetBranchAddress("fMuons", &fMuons);
+   fChain->SetBranchAddress("fLastTrack", &fLastTrack);
+   fChain->SetBranchAddress("fWebHistogram", &fWebHistogram);
+   fChain->SetBranchAddress("fH", &fH);
+   fChain->SetBranchAddress("fTriggerBits", &fTriggerBits);
+   fChain->SetBranchAddress("fIsValid", &fIsValid);
 }
 
 Bool_t TSelEvent::Notify()
@@ -186,7 +186,7 @@ Bool_t TSelEvent::Notify()
    // to the generated code, but the routine can be extended by the
    // user if needed.
 
-   Info("Notify","processing file: %s", fChain->GetCurrentFile()->GetName());
+   Info("Notify", "processing file: %s", fChain->GetCurrentFile()->GetName());
 
    // Get branch pointers
    b_event_fType = fChain->GetBranch("fType[20]");

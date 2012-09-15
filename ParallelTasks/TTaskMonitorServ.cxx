@@ -20,12 +20,12 @@ ClassImp(TTaskMonitorServ)
 
 //_________________________________________________________________________________________________
 TTaskMonitorServ::TTaskMonitorServ(const char *name, const char *title) :
-TTaskParallel(name, title),
-fServSocket(0),
-fMonitor(0),
-fSocket(0),
-fSocketInternal(0),
-fMonMsg()
+   TTaskParallel(name, title),
+   fServSocket(0),
+   fMonitor(0),
+   fSocket(0),
+   fSocketInternal(0),
+   fMonMsg()
 {
    //
    // Std constructor
@@ -78,14 +78,14 @@ void TTaskMonitorServ::Exec(Option_t *option) {
          if (sServCur) {
 
             TInetAddress adr = sServCur->GetInetAddress();
-            Printf("New connection accepted from %s(%s) ...",adr.GetHostName(),adr.GetHostAddress());
+            Printf("New connection accepted from %s(%s) ...", adr.GetHostName(), adr.GetHostAddress());
             fMonitor->Add(sServCur);
             // sending 'connected' string
             sServCur->Send("connected");
             Printf("We sent 'connected' message");
-               TMessage message(kMESS_OBJECT);
-               message.WriteObject(&fMonMsg);
-               sServCur->Send(message);
+            TMessage message(kMESS_OBJECT);
+            message.WriteObject(&fMonMsg);
+            sServCur->Send(message);
 
          }
       } else {
@@ -132,7 +132,7 @@ void TTaskMonitorServ::StopMonitoring()
 }
 
 //_________________________________________________________________________________________________
-void TTaskMonitorServ::SendMonitoringMsg(Int_t val,Int_t val2)
+void TTaskMonitorServ::SendMonitoringMsg(Int_t val, Int_t val2)
 {
 
 
@@ -142,7 +142,7 @@ void TTaskMonitorServ::SendMonitoringMsg(Int_t val,Int_t val2)
    if (l) {
       TIter next(l);
       TSocket *s;
-      while((s = (TSocket*)next())) {
+      while ((s = (TSocket *)next())) {
          if (s->IsA() == TServerSocket::Class()) continue;
          if (s == fSocketInternal) continue;
          TMessage message(kMESS_OBJECT);
@@ -162,9 +162,9 @@ void TTaskMonitorServ::DisconnectAllClients()
    if (l) {
       TIter next(l);
       TSocket *s;
-      while((s = (TSocket*)next())) {
+      while ((s = (TSocket *)next())) {
          if (s->IsA() == TServerSocket::Class()) continue;
-         s->Send("disconnect",kMESS_STRING);
+         s->Send("disconnect", kMESS_STRING);
       }
    }
 }

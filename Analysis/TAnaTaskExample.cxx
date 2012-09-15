@@ -13,7 +13,7 @@ ClassImp(TAnaTaskExample)
 
 //_________________________________________________________________________________________________
 TAnaTaskExample::TAnaTaskExample(const char *name, const char *title) :
-TAnalysisTask(name, title) {
+   TAnalysisTask(name, title) {
    //
    // Std constructor
    //
@@ -28,7 +28,7 @@ TAnaTaskExample::~TAnaTaskExample() {
 
 //_________________________________________________________________________________________________
 TAnaTaskExample::TAnaTaskExample(const TAnaTaskExample &obj) :
-      TAnalysisTask(obj)
+   TAnalysisTask(obj)
 
 {
    //
@@ -55,6 +55,6 @@ void TAnaTaskExample::Exec(Option_t *option) {
    // Exec of manager task
    //
 
-   Printf("Running Task %s",GetName());
+   Printf("Running Task %s", GetName());
 
 }

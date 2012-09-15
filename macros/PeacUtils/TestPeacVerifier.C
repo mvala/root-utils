@@ -4,7 +4,7 @@ void TestPeacVerifier() {
 
 //   TProof *p = TProof::Open("skaf.saske.sk:1099","workers=1x");
 //   TProof *p = TProof::Open("skaf.saske.sk","workers=1x");
-   TProof *p = TProof::Open("alice-caf.cern.ch","workers=1x");
+   TProof *p = TProof::Open("alice-caf.cern.ch", "workers=1x");
    p->UploadPackage("../pars/PeacUtils");
    if (p->EnablePackage("PeacUtils")) return;
 

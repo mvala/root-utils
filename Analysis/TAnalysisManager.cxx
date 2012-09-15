@@ -10,13 +10,13 @@ ClassImp(TAnalysisManager)
 TAnalysisManager::TAnalysisManager() : TTaskManager() {
 }
 
-TAnalysisManager::TAnalysisManager(const char* name,const char *title) : TTaskManager(name,title) {
+TAnalysisManager::TAnalysisManager(const char *name, const char *title) : TTaskManager(name, title) {
 }
 
 TAnalysisManager::~TAnalysisManager() {
 }
 
-void TAnalysisManager::Process(TTree *tree,Long64_t entry) {
+void TAnalysisManager::Process(TTree *tree, Long64_t entry) {
 
 
    // Begin Event
@@ -24,7 +24,7 @@ void TAnalysisManager::Process(TTree *tree,Long64_t entry) {
    TAnalysisTask *t;
    while ((t = (TAnalysisTask *) next())) {
       if (!t->IsActive()) continue;
-      t->BeginEvent(tree,entry);
+      t->BeginEvent(tree, entry);
    }
 
 //   // Process Event
@@ -42,7 +42,7 @@ void TAnalysisManager::Process(TTree *tree,Long64_t entry) {
    next.Reset();
    while ((t = (TAnalysisTask *) next())) {
       if (!t->IsActive()) continue;
-      t->TerminateEvent(tree,entry);
+      t->TerminateEvent(tree, entry);
    }
 
 //   Printf("restoring Manager");

@@ -28,45 +28,45 @@
 ClassImp(TTaskMonitorGui)
 
 //_________________________________________________________________________________________________
-TTaskMonitorGui::TTaskMonitorGui(const TGWindow *p,UInt_t w,UInt_t h) :
-TGMainFrame(p,w,h),
-fSocketMonitor(0),
-fHost(""),
-fPort(9090),
-fNumConnectRetry(10),
-fSocket(0),
-fMonMsg(0),
-fConnectButton(0),
-fRefreshButton(0),
-fEcanvas(0)
+TTaskMonitorGui::TTaskMonitorGui(const TGWindow *p, UInt_t w, UInt_t h) :
+   TGMainFrame(p, w, h),
+   fSocketMonitor(0),
+   fHost(""),
+   fPort(9090),
+   fNumConnectRetry(10),
+   fSocket(0),
+   fMonMsg(0),
+   fConnectButton(0),
+   fRefreshButton(0),
+   fEcanvas(0)
 {
    //
    // Std constructor
    //
 
-   TGVerticalFrame *infoFrameMain = new TGVerticalFrame(this, 600, 400,kHorizontalFrame);
+   TGVerticalFrame *infoFrameMain = new TGVerticalFrame(this, 600, 400, kHorizontalFrame);
 
-   infoFrameMain->AddFrame(CreateInfoFrame(infoFrameMain), new TGLayoutHints( kLHintsExpandY    | kLHintsExpandX,2,2,2,2));
+   infoFrameMain->AddFrame(CreateInfoFrame(infoFrameMain), new TGLayoutHints(kLHintsExpandY    | kLHintsExpandX, 2, 2, 2, 2));
 
    //   fEcanvas = new TRootEmbeddedCanvas("ECanvas", infoFrameMain, 400, 400);
    //   infoFrameMain->AddFrame(fEcanvas, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
 
-   AddFrame(infoFrameMain,new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
+   AddFrame(infoFrameMain, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
 
    // Create a horizontal frame widget with buttons
-   TGHorizontalFrame *hframe = new TGHorizontalFrame(this,600,40);
-   fConnectButton = new TGTextButton(hframe,"Dis&connect");
-   fConnectButton->Connect("Clicked()","TTaskMonitorGui",this,"ConnectDisconnect()");
-   hframe->AddFrame(fConnectButton, new TGLayoutHints(kLHintsCenterX,5,5,3,4));
+   TGHorizontalFrame *hframe = new TGHorizontalFrame(this, 600, 40);
+   fConnectButton = new TGTextButton(hframe, "Dis&connect");
+   fConnectButton->Connect("Clicked()", "TTaskMonitorGui", this, "ConnectDisconnect()");
+   hframe->AddFrame(fConnectButton, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-   fRefreshButton = new TGTextButton(hframe,"&Refresh");
-   fRefreshButton->Connect("Clicked()","TTaskMonitorGui",this,"Refresh()");
+   fRefreshButton = new TGTextButton(hframe, "&Refresh");
+   fRefreshButton->Connect("Clicked()", "TTaskMonitorGui", this, "Refresh()");
    fRefreshButton->SetEnabled(kFALSE);
-   hframe->AddFrame(fRefreshButton, new TGLayoutHints(kLHintsCenterX,5,5,3,4));
-   TGTextButton *exit = new TGTextButton(hframe,"&Exit");
-   exit->Connect("Clicked()","TTaskMonitorGui",this,"Quit()");
-   hframe->AddFrame(exit, new TGLayoutHints(kLHintsCenterX,5,5,3,4));
-   AddFrame(hframe, new TGLayoutHints(kLHintsCenterX,2,2,2,2));
+   hframe->AddFrame(fRefreshButton, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+   TGTextButton *exit = new TGTextButton(hframe, "&Exit");
+   exit->Connect("Clicked()", "TTaskMonitorGui", this, "Quit()");
+   hframe->AddFrame(exit, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+   AddFrame(hframe, new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
 
    SetWindowName("Task Monitoring GUI");
    MapSubwindows();
@@ -76,7 +76,7 @@ fEcanvas(0)
 
    fSocketMonitor = new TMonitor();
 
-   Connect("SetConnected()","TTaskMonitorGui",this,"WaitFormInfoMessage()");
+   Connect("SetConnected()", "TTaskMonitorGui", this, "WaitFormInfoMessage()");
 
 
 
@@ -84,26 +84,26 @@ fEcanvas(0)
 
 //_________________________________________________________________________________________________
 TGGroupFrame *TTaskMonitorGui::CreateInfoFrame(TGWindow *p) {
-   TGGroupFrame *infoGroupFrame = new TGGroupFrame(p,"MY info");
+   TGGroupFrame *infoGroupFrame = new TGGroupFrame(p, "MY info");
    infoGroupFrame->SetTitlePos(TGGroupFrame::kCenter);
    //   infoGroupFrame->SetLayoutManager(new TGVerticalLayout(infoGroupFrame));
 
    TTaskParallel t;
    TGLabel *l;
    TGHorizontalFrame *hFrame;
-   for (Int_t i=0;i<TTaskParallel::kAllTypes;i++) {
-      hFrame = new TGHorizontalFrame(infoGroupFrame, 400, 100,kHorizontalFrame);
+   for (Int_t i = 0; i < TTaskParallel::kAllTypes; i++) {
+      hFrame = new TGHorizontalFrame(infoGroupFrame, 400, 100, kHorizontalFrame);
 
-      l = new TGLabel(hFrame,TString::Format("%s ",t.GetTypeName((TTaskParallel::ETaskType)i)).Data());
-      hFrame->AddFrame(l,new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,1,1,1,1));
+      l = new TGLabel(hFrame, TString::Format("%s ", t.GetTypeName((TTaskParallel::ETaskType)i)).Data());
+      hFrame->AddFrame(l, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
 
-      l = new TGLabel(hFrame," : ");
-      hFrame->AddFrame(l,new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,1,1,1,1));
+      l = new TGLabel(hFrame, " : ");
+      hFrame->AddFrame(l, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
 
-      fLabelNumThreads[i] = new TGLabel(hFrame,"0");
-      hFrame->AddFrame(fLabelNumThreads[i],new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,1,1,1,1));
+      fLabelNumThreads[i] = new TGLabel(hFrame, "0");
+      hFrame->AddFrame(fLabelNumThreads[i], new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY, 1, 1, 1, 1));
 
-      infoGroupFrame->AddFrame(hFrame,new TGLayoutHints(kLHintsLeft | kLHintsTop |kLHintsExpandX, 1,1,1,1));
+      infoGroupFrame->AddFrame(hFrame, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX, 1, 1, 1, 1));
    }
 
    return infoGroupFrame;
@@ -135,13 +135,13 @@ void TTaskMonitorGui::ConnectDisconnect() {
       if (fHost.IsNull()) {
          // input box
          char ret[64];
-         TGInputDialog *id = new TGInputDialog(gClient->GetRoot(),this,"Enter hostname","localhost",ret);
+         TGInputDialog *id = new TGInputDialog(gClient->GetRoot(), this, "Enter hostname", "localhost", ret);
          fHost = ret;
       }
 
-      for (Int_t iTry=0;iTry<fNumConnectRetry;iTry++) {
+      for (Int_t iTry = 0; iTry < fNumConnectRetry; iTry++) {
          fSocket = new TSocket(fHost.Data(), fPort);
-         if (!fSocket->IsValid()){
+         if (!fSocket->IsValid()) {
             fSocketMonitor->Remove(fSocket);
             delete fSocket;
             fSocket = 0;
@@ -198,15 +198,15 @@ void TTaskMonitorGui::HandleMessage(TString msgStr) {
       //      Printf("We have string '%s'",msg.Data());
       if (!msg.CompareTo("connected")) {
          TInetAddress adr = fSocket->GetInetAddress();
-         Printf("We are connected to %s",adr.GetHostAddress());
+         Printf("We are connected to %s", adr.GetHostAddress());
       } else if (!msg.CompareTo("disconnect")) {
          TInetAddress adr = fSocket->GetInetAddress();
-         Printf("Server %s was disconnected",adr.GetHostAddress());
+         Printf("Server %s was disconnected", adr.GetHostAddress());
          Quit(kFALSE);
       }
    } else if (msgCur->What() == kMESS_OBJECT) {
       //      Printf("We have object");
-      fMonMsg = (TTaskMonitorMsg*) msgCur->ReadObject(msgCur->GetClass());
+      fMonMsg = (TTaskMonitorMsg *) msgCur->ReadObject(msgCur->GetClass());
       DrawMonitorWindow();
       delete fMonMsg;
       fMonMsg = 0;
@@ -218,11 +218,11 @@ void TTaskMonitorGui::DrawMonitorWindow() {
 
    if (!fMonMsg) return;
 
-   Int_t running,done;
-   for(Int_t i;i<TTaskParallel::kAllTypes;i++) {
-      running = fMonMsg->GetNumThreads((TTaskParallel::ETaskType)i,TTaskParallel::kRunning);
-      done = fMonMsg->GetNumThreads((TTaskParallel::ETaskType)i,TTaskParallel::kDone);
-      fLabelNumThreads[i]->SetText(TString::Format("%d (%d)",running-done,done).Data());
+   Int_t running, done;
+   for (Int_t i; i < TTaskParallel::kAllTypes; i++) {
+      running = fMonMsg->GetNumThreads((TTaskParallel::ETaskType)i, TTaskParallel::kRunning);
+      done = fMonMsg->GetNumThreads((TTaskParallel::ETaskType)i, TTaskParallel::kDone);
+      fLabelNumThreads[i]->SetText(TString::Format("%d (%d)", running - done, done).Data());
 //      fLabelNumThreads[i]->SetText(TString::Format("%d (%d)",running,done).Data());
    }
 

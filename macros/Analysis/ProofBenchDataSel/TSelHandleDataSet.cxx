@@ -64,7 +64,7 @@ void TSelHandleDataSet::SlaveBegin(TTree *)
          }
       }
    }
-   
+
    // Use default if nothing found in the input list
    if (!fType) fType = new TPBHandleDSType(TPBHandleDSType::kReleaseCache);
 }
@@ -85,7 +85,7 @@ void TSelHandleDataSet::ReleaseCache(const char *fn)
       Info("ReleaseCache", "file cache for file '%s' cleaned ...", filename.Data());
    } else {
       Error("ReleaseCache", "cannot open file '%s' for cache clean up; errno=%d",
-                            filename.Data(), errno);
+            filename.Data(), errno);
    }
 #else
    Info("ReleaseCache", "dummy function: file '%s' untouched ...", fn);
@@ -142,7 +142,7 @@ void TSelHandleDataSet::CopyFile(const char *fn)
    TString dst = TString::Format("%s/%s", fDestDir.Data(), basefn.Data());
    if (!TFile::Cp(fn, dst.Data())) {
       Error("CopyFile", "problems copying file '%s' to '%s'", fn, dst.Data());
-      return;      
+      return;
    }
    Info("CopyFile", "file '%s' created ...", dst.Data());
 
@@ -174,7 +174,7 @@ Bool_t TSelHandleDataSet::Process(Long64_t entry)
    TDSetElement *fCurrent = 0;
    TPair *elemPair = 0;
    if (fInput && (elemPair = dynamic_cast<TPair *>
-                      (fInput->FindObject("PROOF_CurrentElement")))) {
+                             (fInput->FindObject("PROOF_CurrentElement")))) {
       if ((fCurrent = dynamic_cast<TDSetElement *>(elemPair->Value()))) {
          Info("Process", "entry %lld: file: '%s'", entry, fCurrent->GetName());
       } else {
@@ -189,7 +189,7 @@ Bool_t TSelHandleDataSet::Process(Long64_t entry)
    TString lfname = gEnv->GetValue("Path.Localroot", "");
    TFile::EFileType type = TFile::GetType(url.GetUrl(), "", &lfname);
    if (type == TFile::kLocal &&
-       strcmp(url.GetProtocol(),"root") && strcmp(url.GetProtocol(),"xrd"))
+       strcmp(url.GetProtocol(), "root") && strcmp(url.GetProtocol(), "xrd"))
       lfname = url.GetFileAndOptions();
 
    if (fType->GetType() == TPBHandleDSType::kReleaseCache) {
@@ -210,13 +210,13 @@ Bool_t TSelHandleDataSet::Process(Long64_t entry)
       }
    } else if (fType->GetType() == TPBHandleDSType::kRemoveFiles) {
       // Remove the file
-      RemoveFile(url.GetFileAndOptions());     
+      RemoveFile(url.GetFileAndOptions());
    } else if (fType->GetType() == TPBHandleDSType::kCopyFiles) {
       // Copy file
-      CopyFile(url.GetFileAndOptions());     
+      CopyFile(url.GetFileAndOptions());
    } else {
       // Type unknown
-      Warning("Process", "type: %d is unknown", fType->GetType());     
+      Warning("Process", "type: %d is unknown", fType->GetType());
    }
 
    return kTRUE;

@@ -27,7 +27,7 @@
 #include "TProofNodeInfo.h"
 #include "TProofBenchTypes.h"
 #include "TProof.h"
-#include "TMap.h" 
+#include "TMap.h"
 #include "TDSet.h"
 #include "TEnv.h"
 #include "TFileInfo.h"
@@ -41,18 +41,18 @@ ClassImp(TSelEventGen)
 
 //______________________________________________________________________________
 TSelEventGen::TSelEventGen()
-             : fBaseDir(""), fNEvents(100000), fNTracks(100), fNTracksMax(-1),
-               fRegenerate(kFALSE), fTotalGen(0), fFilesGenerated(0), fChain(0)
+   : fBaseDir(""), fNEvents(100000), fNTracks(100), fNTracksMax(-1),
+     fRegenerate(kFALSE), fTotalGen(0), fFilesGenerated(0), fChain(0)
 {
    // Constructor
-   if (gProofServ){
-      fBaseDir=gProofServ->GetDataDir();
+   if (gProofServ) {
+      fBaseDir = gProofServ->GetDataDir();
       // Two directories up
       fBaseDir.Remove(fBaseDir.Last('/'));
       fBaseDir.Remove(fBaseDir.Last('/'));
    }
-   else{
-      fBaseDir="";
+   else {
+      fBaseDir = "";
    }
 }
 
@@ -66,14 +66,14 @@ void TSelEventGen::Begin(TTree *)
    TString option = GetOption();
    // Determine the test type
    TMap *filemap = dynamic_cast<TMap *>
-                     (fInput->FindObject("PROOF_FilesToProcess"));
+                   (fInput->FindObject("PROOF_FilesToProcess"));
    if (filemap) {
       //Info("Begin", "dumping the file map:");
       //filemap->Print();
    } else {
       if (fInput->FindObject("PROOF_FilesToProcess")) {
          Error("Begin", "object 'PROOF_FilesToProcess' found but not a map"
-              " (%s)", fInput->FindObject("PROOF_FilesToProcess")->ClassName());
+               " (%s)", fInput->FindObject("PROOF_FilesToProcess")->ClassName());
       } else {
          Error("Begin", "object 'PROOF_FilesToProcess' not found");
       }
@@ -93,127 +93,127 @@ void TSelEventGen::SlaveBegin(TTree *tree)
 
    //get parameters
 
-   Bool_t found_basedir=kFALSE;
-   Bool_t found_nevents=kFALSE;
-   Bool_t found_ntracks=kFALSE;
-   Bool_t found_ntrkmax=kFALSE;
-   Bool_t found_regenerate=kFALSE;
+   Bool_t found_basedir = kFALSE;
+   Bool_t found_nevents = kFALSE;
+   Bool_t found_ntracks = kFALSE;
+   Bool_t found_ntrkmax = kFALSE;
+   Bool_t found_regenerate = kFALSE;
 
    TIter nxt(fInput);
    TString sinput;
    TObject *obj;
 
-   while ((obj = nxt())){
+   while ((obj = nxt())) {
 
-      sinput=obj->GetName();
+      sinput = obj->GetName();
       //Info("SlaveBegin", "Input list: %s", sinput.Data());
 
-      if (sinput.Contains("PROOF_BenchmarkBaseDir")){
-         TNamed* a=dynamic_cast<TNamed*>(obj);
-         if (a){
-            TString proof_benchmarkbasedir=a->GetTitle();
-            if (!proof_benchmarkbasedir.IsNull()){
+      if (sinput.Contains("PROOF_BenchmarkBaseDir")) {
+         TNamed *a = dynamic_cast<TNamed *>(obj);
+         if (a) {
+            TString proof_benchmarkbasedir = a->GetTitle();
+            if (!proof_benchmarkbasedir.IsNull()) {
                TUrl u(proof_benchmarkbasedir, kTRUE);
                Bool_t isLocal = !strcmp(u.GetProtocol(), "file") ? kTRUE : kFALSE;
                if (isLocal && !gSystem->IsAbsoluteFileName(u.GetFile()))
-                  u.SetFile(TString::Format("%s/%s", fBaseDir.Data(), u.GetFile())); 
+                  u.SetFile(TString::Format("%s/%s", fBaseDir.Data(), u.GetFile()));
                if ((gSystem->AccessPathName(u.GetFile()) &&
                     gSystem->mkdir(u.GetFile(), kTRUE) == 0) ||
-                    gSystem->AccessPathName(u.GetFile(), kWritePermission)) {
-                    // Directory is writable
-                    fBaseDir = u.GetFile();
-                    Info("SlaveBegin", "Using directory \"%s\"", fBaseDir.Data());
-               } else{
+                   gSystem->AccessPathName(u.GetFile(), kWritePermission)) {
+                  // Directory is writable
+                  fBaseDir = u.GetFile();
+                  Info("SlaveBegin", "Using directory \"%s\"", fBaseDir.Data());
+               } else {
                   // Directory is not writable or not available, use default directory
                   Warning("BeginSlave", "\"%s\" directory is not writable or not existing,"
                           " using default directory: %s",
                           proof_benchmarkbasedir.Data(), fBaseDir.Data());
                }
-            } else{
+            } else {
                Info("BeginSlave", "Using default directory: %s",
-                                   fBaseDir.Data());
+                    fBaseDir.Data());
             }
-            found_basedir=kTRUE; 
+            found_basedir = kTRUE;
          }
-         else{
+         else {
             Error("SlaveBegin", "PROOF_BenchmarkBaseDir not type TNamed");
          }
          continue;
       }
-      if (sinput.Contains("PROOF_BenchmarkNEvents")){
-         TParameter<Long64_t>* a=dynamic_cast<TParameter<Long64_t>*>(obj);
-         if (a){
-            fNEvents= a->GetVal();
-            found_nevents=kTRUE; 
+      if (sinput.Contains("PROOF_BenchmarkNEvents")) {
+         TParameter<Long64_t> *a = dynamic_cast<TParameter<Long64_t>*>(obj);
+         if (a) {
+            fNEvents = a->GetVal();
+            found_nevents = kTRUE;
          }
-         else{
+         else {
             Error("SlaveBegin", "PROOF_BenchmarkEvents not type TParameter"
-                                "<Long64_t>*");
+                  "<Long64_t>*");
          }
          continue;
       }
-      if (sinput.Contains("PROOF_BenchmarkNTracks")){
-         TParameter<Int_t>* a=dynamic_cast<TParameter<Int_t>*>(obj);
-         if (a){
-            fNTracks=a->GetVal();
-            found_ntracks=kTRUE; 
+      if (sinput.Contains("PROOF_BenchmarkNTracks")) {
+         TParameter<Int_t> *a = dynamic_cast<TParameter<Int_t>*>(obj);
+         if (a) {
+            fNTracks = a->GetVal();
+            found_ntracks = kTRUE;
          }
-         else{
+         else {
             Error("SlaveBegin", "PROOF_BenchmarkNTracks not type TParameter"
-                                "<Int_t>*");
+                  "<Int_t>*");
          }
          continue;
       }
-      if (sinput.Contains("PROOF_BenchmarkNTracksMax")){
-         TParameter<Int_t>* a=dynamic_cast<TParameter<Int_t>*>(obj);
-         if (a){
-            fNTracksMax=a->GetVal();
-            found_ntrkmax=kTRUE; 
+      if (sinput.Contains("PROOF_BenchmarkNTracksMax")) {
+         TParameter<Int_t> *a = dynamic_cast<TParameter<Int_t>*>(obj);
+         if (a) {
+            fNTracksMax = a->GetVal();
+            found_ntrkmax = kTRUE;
          }
-         else{
+         else {
             Error("SlaveBegin", "PROOF_BenchmarkNTracksMax not type TParameter"
-                                "<Int_t>*");
+                  "<Int_t>*");
          }
          continue;
       }
-      if (sinput.Contains("PROOF_BenchmarkRegenerate")){
-         TParameter<Int_t>* a=dynamic_cast<TParameter<Int_t>*>(obj);
-         if (a){
-            fRegenerate=a->GetVal();
-            found_regenerate=kTRUE; 
+      if (sinput.Contains("PROOF_BenchmarkRegenerate")) {
+         TParameter<Int_t> *a = dynamic_cast<TParameter<Int_t>*>(obj);
+         if (a) {
+            fRegenerate = a->GetVal();
+            found_regenerate = kTRUE;
          }
-         else{
+         else {
             Error("SlaveBegin", "PROOF_BenchmarkRegenerate not type TParameter"
-                                "<Int_t>*");
+                  "<Int_t>*");
          }
          continue;
       }
    }
-   
-   if (!found_basedir){
+
+   if (!found_basedir) {
       Warning("SlaveBegin", "PROOF_BenchmarkBaseDir not found; using default:"
-                            " %s", fBaseDir.Data());
+              " %s", fBaseDir.Data());
    }
-   if (!found_nevents){
+   if (!found_nevents) {
       Warning("SlaveBegin", "PROOF_BenchmarkNEvents not found; using default:"
-                            " %lld", fNEvents);
+              " %lld", fNEvents);
    }
-   if (!found_ntracks){
+   if (!found_ntracks) {
       Warning("SlaveBegin", "PROOF_BenchmarkNTracks not found; using default:"
-                            " %d", fNTracks);
+              " %d", fNTracks);
    }
-   if (!found_ntrkmax){
+   if (!found_ntrkmax) {
       Warning("SlaveBegin", "PROOF_BenchmarkNTracksMax not found; using default:"
-                            " %d", fNTracksMax);
+              " %d", fNTracksMax);
    } else if (fNTracksMax <= fNTracks) {
       Warning("SlaveBegin", "PROOF_BenchmarkNTracksMax must be larger then"
-                            " fNTracks=%d ; ignoring", fNTracks);
+              " fNTracks=%d ; ignoring", fNTracks);
       fNTracksMax = -1;
       found_ntrkmax = kFALSE;
    }
-   if (!found_regenerate){
+   if (!found_regenerate) {
       Warning("SlaveBegin", "PROOF_BenchmarkRegenerate not found; using"
-                            " default: %d", fRegenerate);
+              " default: %d", fRegenerate);
    }
 
    fFilesGenerated = new TList();
@@ -242,8 +242,8 @@ Long64_t TSelEventGen::GenerateFiles(TString filename, Long64_t sizenevents)
 //   or bytes written when filetype==kPBFileCleanup
 //return 0 in case error
 
-   Long64_t nentries=0;
-   TDirectory* savedir = gDirectory;
+   Long64_t nentries = 0;
+   TDirectory *savedir = gDirectory;
    //printf("current dir=%s\n", gDirectory->GetPath());
 
    TFile *f = TFile::Open(filename, "RECREATE");
@@ -252,34 +252,34 @@ Long64_t TSelEventGen::GenerateFiles(TString filename, Long64_t sizenevents)
 
    if (!f || f->IsZombie()) return 0;
 
-   Event *event=new Event();
+   Event *event = new Event();
    Event *ep = event;
-   TTree* eventtree= new TTree("EventTree", "Event Tree");
+   TTree *eventtree = new TTree("EventTree", "Event Tree");
    eventtree->SetDirectory(f);
 
-   const Int_t buffersize=32000;
+   const Int_t buffersize = 32000;
    eventtree->Branch("event", "Event", &ep, buffersize, 1);
    eventtree->AutoSave();
 
-   Long64_t i=0;
-   Long64_t size_generated=0;
+   Long64_t i = 0;
+   Long64_t size_generated = 0;
 
 //   f->SetCompressionLevel(0); //no compression
    Int_t ntrks = fNTracks;
-   
-   Info("GenerateFiles", "Generating %s", filename.Data());   
-   while (sizenevents--){
+
+   Info("GenerateFiles", "Generating %s", filename.Data());
+   while (sizenevents--) {
       //event->Build(i++,fNTracksBench,0);
       if (fNTracksMax > fNTracks) {
          // Required to smear the number of tracks between [min,max]
          ntrks = fNTracks + gRandom->Integer(fNTracksMax - fNTracks);
       }
       event->Build(i++, ntrks, 0);
-      size_generated+=eventtree->Fill();
+      size_generated += eventtree->Fill();
    }
-   nentries=eventtree->GetEntries();
+   nentries = eventtree->GetEntries();
    Info("GenerateFiles", "%s generated with %lld entries", filename.Data(),
-                                                              nentries);
+        nentries);
    savedir = gDirectory;
 
    f = eventtree->GetCurrentFile();
@@ -321,7 +321,7 @@ Bool_t TSelEventGen::Process(Long64_t entry)
    TDSetElement *fCurrent = 0;
    TPair *elemPair = 0;
    if (fInput && (elemPair = dynamic_cast<TPair *>
-                      (fInput->FindObject("PROOF_CurrentElement")))) {
+                             (fInput->FindObject("PROOF_CurrentElement")))) {
       if ((fCurrent = dynamic_cast<TDSetElement *>(elemPair->Value()))) {
          Info("Process", "entry %lld: file: '%s'", entry, fCurrent->GetName());
       } else {
@@ -333,7 +333,7 @@ Bool_t TSelEventGen::Process(Long64_t entry)
    // Generate
    TString filename =
       TString::Format("%s/%s", fBaseDir.Data(), fCurrent->GetName());
-      
+
    // Set the Url for remote access
    TString dsrv, seed;
    seed = TString::Format("%s/%s", gSystem->HostName(), filename.Data());
@@ -344,32 +344,32 @@ Bool_t TSelEventGen::Process(Long64_t entry)
       dsrv.Form("root://%s/", TUrl(gSystem->HostName()).GetHostFQDN());
    }
    TString srvProto = TUrl(dsrv).GetProtocol();
-      
+
    // Remove prefix, if any, if included and if Xrootd
    TString fndset(filename);
-   TString pfx  = gEnv->GetValue("Path.Localroot","");
+   TString pfx  = gEnv->GetValue("Path.Localroot", "");
    if (!pfx.IsNull() && fndset.BeginsWith(pfx) &&
-      (srvProto == "root" || srvProto == "xrd")) fndset.Remove(0, pfx.Length());
-   
+       (srvProto == "root" || srvProto == "xrd")) fndset.Remove(0, pfx.Length());
+
 
    //generate files
    Long64_t neventstogenerate = fNEvents;
 
-   Long64_t entries_file=0;
-   Long64_t filesize=0;
-   Bool_t filefound=kFALSE;
+   Long64_t entries_file = 0;
+   Long64_t filesize = 0;
+   Bool_t filefound = kFALSE;
    FileStat_t filestat;
    TUUID uuid;
    if (!fRegenerate && !gSystem->GetPathInfo(filename, filestat)) { //stat'ed
       TFile *f = TFile::Open(filename);
-      if (f && !f->IsZombie()){
-         TTree* t = (TTree *) f->Get("EventTree");
+      if (f && !f->IsZombie()) {
+         TTree *t = (TTree *) f->Get("EventTree");
          if (t) {
             entries_file = t->GetEntries();
             if (entries_file == neventstogenerate) {
                // File size seems to be correct, skip generation
                Info("Process", "bench file (%s, entries=%lld) exists:"
-                               " skipping generation.", filename.Data(), entries_file);
+                    " skipping generation.", filename.Data(), entries_file);
                filesize = f->GetSize();
                uuid = f->GetUUID();
                filefound = kTRUE;
@@ -378,7 +378,7 @@ Bool_t TSelEventGen::Process(Long64_t entry)
          f->Close();
       }
       SafeDelete(f);
-   } 
+   }
 
    if (!filefound) {  // Generate
       gRandom->SetSeed(static_cast<UInt_t>(TMath::Hash(seed)));
@@ -393,13 +393,13 @@ Bool_t TSelEventGen::Process(Long64_t entry)
          Error("Process", "can not open generated file: %s", filename.Data());
          return kFALSE;
       }
-      
+
       SafeDelete(f);
    }
 
    // Add meta data to the file info
-   TFileInfoMeta* fimeta = new TFileInfoMeta("/EventTree", "TTree", entries_file);
-   TMD5* md5 = TMD5::FileChecksum(filename);
+   TFileInfoMeta *fimeta = new TFileInfoMeta("/EventTree", "TTree", entries_file);
+   TMD5 *md5 = TMD5::FileChecksum(filename);
    TString md5s = (md5) ? md5->AsString() : "";
    TFileInfo *fi = new TFileInfo(TString::Format("%s%s", dsrv.Data(), fndset.Data()),
                                  filesize, uuid.AsString(), md5s.Data(), fimeta);
@@ -423,8 +423,8 @@ void TSelEventGen::SlaveTerminate()
    if (fFilesGenerated && fFilesGenerated->GetSize() > 0) {
       fOutput->Add(fFilesGenerated);
       Info("SlaveTerminate",
-              "list '%s' of files generated by this worker added to the output list",
-              fFilesGenerated->GetName());
+           "list '%s' of files generated by this worker added to the output list",
+           fFilesGenerated->GetName());
    } else {
       if (!fFilesGenerated) {
          Warning("SlaveTerminate", "no list of generated files defined!");

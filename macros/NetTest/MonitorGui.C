@@ -16,15 +16,15 @@ void MonitorGui() {
    TMonitor *mon = new TMonitor;
    mon->Add(sock);
 
-      while (1) {
-         Printf("Select");
-   mon->Select();
-   Printf("Recv");
+   while (1) {
+      Printf("Select");
+      mon->Select();
+      Printf("Recv");
 //   sock->Send("disconnect");
 
 
-   sock->Recv(msgCur);
-      }
+      sock->Recv(msgCur);
+   }
    sock->Close();
 
 

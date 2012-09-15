@@ -12,34 +12,35 @@ void TestTaskManagerSimple() {
    //   taskMon->Exec("");
    //   return;
 
-   TTaskManager *taskMgr = new TTaskManager("TaskMgr","TaskManager");
-   taskMgr->SetParallel(4,TTaskParallel::kCpu);
-   taskMgr->SetParallel(2,TTaskParallel::kIO);
-   taskMgr->SetParallel(10,TTaskParallel::kFake);
+   TTaskManager *taskMgr = new TTaskManager("TaskMgr", "TaskManager");
+   taskMgr->SetParallel(4, TTaskParallel::kCpu);
+   taskMgr->SetParallel(2, TTaskParallel::kIO);
+   taskMgr->SetParallel(10, TTaskParallel::kFake);
 
    Bool_t useDeps = kFALSE;
-//   useDeps = kTRUE;
+   useDeps = kTRUE;
 
    // using monitoring
    taskMgr->UseMonitoring();
 
-   TTaskStress *task1,*task2;
+   TTaskStress *task1, *task2;
    TTaskStress::EStressType stressType = TTaskStress::kSleep;
 
    TTaskStress::EStressType stressType2 = TTaskStress::kSleep;
-//   stressType2 = TTaskStress::kCpu;
+   //   stressType2 = TTaskStress::kCpu;
 
-   Int_t nTasks = 20;
-   Int_t nSubTasks = 10;
+   Int_t nTasks = 10;
+   Int_t nSubTasks = 3;
    Int_t depTaskEvery = 4;
-   for (Int_t i=1;i<=nTasks;i++) {
-      task1 = new TTaskStress(TString::Format("task%02d",i*10).Data(), TString::Format("%d",i+10).Data());
+   for (Int_t i = 1; i <= nTasks; i++) {
+      task1 = new TTaskStress(TString::Format("task%02d", i * 10).Data(), TString::Format("%d", i + 10).Data());
       task1->SetStressType(stressType);
-//      task1->SetType(TTaskParallel::kIO);
+      //      task1->SetType(TTaskParallel::kIO);
 
-      if (i%depTaskEvery==0) {
-         for (Int_t j=1;j<=nSubTasks;j++) {
-            task2 = new TTaskStress(TString::Format("task%02d",i*10+j).Data(), TString::Format("%d",i+j).Data());
+      if (i % depTaskEvery == 0) {
+         for (Int_t j = 1; j <= nSubTasks; j++) {
+            task2 = new TTaskStress(TString::Format("task%02d", i * 10 + j).Data(),
+                                    TString::Format("%d", i + j).Data());
             task2->SetStressType(stressType2);
             if (useDeps) task2->AddDependency(task1);
             task1->Add(task2);
@@ -105,7 +106,7 @@ void TestTaskManagerSimple() {
    //
 
    taskMgr->Exec("");
-//   taskMgr->RestoreManager();
-//   Printf("Exec2");
-//   taskMgr->Exec("");
+   taskMgr->RestoreManager();
+   Printf("Exec2");
+   taskMgr->Exec("");
 }

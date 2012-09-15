@@ -10,7 +10,7 @@ class TPeacVerifierSel : public TSelector {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
 
-   TPeacVerifierSel(TTree *tree =0);
+   TPeacVerifierSel(TTree *tree = 0);
    virtual ~TPeacVerifierSel() { }
    virtual Int_t   Version() const { return 2; }
    virtual void    Begin(TTree */*tree*/) {;}
@@ -31,7 +31,7 @@ private:
    void VerifyViaLs();
    void VerifyViaXargs();
 
-   ClassDef(TPeacVerifierSel,1);
+   ClassDef(TPeacVerifierSel, 1);
 };
 
 #endif

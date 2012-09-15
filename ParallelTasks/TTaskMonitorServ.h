@@ -31,7 +31,7 @@ public:
 
    void StopMonitoring();
 
-   void SendMonitoringMsg(Int_t val,Int_t val2);
+   void SendMonitoringMsg(Int_t val, Int_t val2);
    void DisconnectAllClients();
 
    TTaskMonitorMsg *GetMonMsg() { return &fMonMsg; }

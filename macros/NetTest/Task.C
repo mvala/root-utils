@@ -32,7 +32,7 @@ void Task() {
       if (sServCur) {
 
          TInetAddress adr = sServCur->GetInetAddress();
-         Printf("New connection accepted from %s(%s) ...",adr.GetHostName(),adr.GetHostAddress());
+         Printf("New connection accepted from %s(%s) ...", adr.GetHostName(), adr.GetHostAddress());
          fMonitor->Add(sServCur);
          // sending 'connected' string
          sServCur->Send("connected");

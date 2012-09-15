@@ -73,8 +73,8 @@ void TTaskStress::Exec(Option_t *option) {
 
    TTaskParallel *t = (TTaskParallel *) GetParent();
    TTaskParallel *tTest;
-   TString prefix="";
-   while(t) {
+   TString prefix = "";
+   while (t) {
       prefix.Append(" ");
       tTest = t;
       t = (TTaskParallel *)tTest->GetParent();
@@ -83,18 +83,18 @@ void TTaskStress::Exec(Option_t *option) {
 
    if (fType == kSleep) {
       TThread::Lock();
-      UInt_t time = (UInt_t) r.Gaus(5000,1000);
+      UInt_t time = (UInt_t) r.Gaus(5000, 1000);
       TThread::UnLock();
-      Printf("[%s]%s%s S (%ld)", option,prefix.Data(), GetName(), time);
+      Printf("[%s]%s%s S (%ld)", option, prefix.Data(), GetName(), time);
       gSystem->Sleep(time);
-      Printf("[%s]%s%s D (%ld)", option,prefix.Data(), GetName(), time);
+      Printf("[%s]%s%s D (%ld)", option, prefix.Data(), GetName(), time);
    } else if (fType == kCpu) {
       TH1D h(TString::Format("myTaskStress_%s", GetName()).Data(), "My Stress task hist", 100, -10, 10);
       h.SetDirectory(0);
       UInt_t entries = (UInt_t) r.Uniform(1e8);
-      Printf("[%s]%s%s S %.2f", option, prefix.Data(),GetName(), (Double_t) entries / 1e6);
+      Printf("[%s]%s%s S %.2f", option, prefix.Data(), GetName(), (Double_t) entries / 1e6);
       h.FillRandom("gaus", entries);
-      Printf("[%s]%s%s D %.2f", option, prefix.Data(),GetName(), (Double_t) entries / 1e6);
+      Printf("[%s]%s%s D %.2f", option, prefix.Data(), GetName(), (Double_t) entries / 1e6);
    }
    timer.Stop();
    // timer.Print();

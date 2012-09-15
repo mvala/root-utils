@@ -17,7 +17,7 @@ class TCutSimple : public TCutObj {
 public:
    TCutSimple(const char *name = "cut", const char *title = "Cut Title");
 
-   virtual Bool_t IsSelected(TObject*obj);
+   virtual Bool_t IsSelected(TObject *obj);
 
    ClassDef(TCutSimple, 1)
 };

@@ -8,21 +8,21 @@
 //
 
 #include <TRandom.h>
-//#include <TThread.h>
-#include "TTaskParallel.h"
+
 #include "TTaskManager.h"
 
-//TTaskThread *TTaskParallel::fgThreadTask = 0;
-//TThreadPool<TTaskThread, TTask*> *TTaskParallel::fgThreadPool = 0;
-//Int_t TTaskParallel::fgNumOfThreads[] = { 0 };
-//Int_t TTaskParallel::fgTaskTypeCount[] = { 0 };
+#include "TTaskParallel.h"
+
 
 ClassImp(TTaskParallel)
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const char *name, const char *title) :
-TTask(name, title), fTaskStatusType(kWaiting), fTaskType(kCpu), fParent(0),
-fListDeps(0)
+   TTask(name, title),
+   fTaskStatusType(kWaiting),
+   fTaskType(kCpu),
+   fParent(0),
+   fListDeps(0)
 {
    // Std constructor
 
@@ -37,7 +37,11 @@ TTaskParallel::~TTaskParallel() {
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const TTaskParallel &obj) :
-         TTask(obj), fTaskStatusType(obj.fTaskStatusType), fTaskType(obj.fTaskType), fParent(obj.fParent),fListDeps(obj.fListDeps)
+   TTask(obj),
+   fTaskStatusType(obj.fTaskStatusType),
+   fTaskType(obj.fTaskType),
+   fParent(obj.fParent),
+   fListDeps(obj.fListDeps)
 
 {
    //
@@ -56,6 +60,7 @@ TTaskParallel &TTaskParallel::operator=(const TTaskParallel &obj) {
       fTaskStatusType = obj.fTaskStatusType;
       fTaskType = obj.fTaskType;
       fParent = obj.fParent;
+      fListDeps = obj.fListDeps;
    }
    return *this;
 
@@ -78,7 +83,7 @@ void TTaskParallel::Add(TTask *task) {
 //_________________________________________________________________________________________________
 void TTaskParallel::AddDependency(TTask *task) {
    //
-   // Adds task
+   // Adds Dependency task
    //
 
    if (!task) return;
@@ -93,15 +98,12 @@ void TTaskParallel::Exec(Option_t *option) {
    // Exec of manager task
    //
 
-   // Printf("%s [START] [%ld] %p", GetName(), fNumOfThreads,fgThreadPool);
-   // Printf("%s [ DONE] [%ld]", GetName(), fNumOfThreads);
-
    RunTask(option);
 
 }
 
 //_________________________________________________________________________________________________
-void TTaskParallel::RunTask(Option_t *option,TTaskParallel::ETaskType type) {
+void TTaskParallel::RunTask(Option_t *option, TTaskParallel::ETaskType type) {
 
    TIter next(fTasks);
    TTask *task;
@@ -130,8 +132,8 @@ void TTaskParallel::RunTask(Option_t *option,TTaskParallel::ETaskType type) {
 Bool_t TTaskParallel::HasDependency() {
 
    TIter next(fListDeps);
-   TTaskParallel*t;
-   while ((t = (TTaskParallel*)next())) {
+   TTaskParallel *t;
+   while ((t = (TTaskParallel *)next())) {
       if (t->GetStatusType() != TTaskParallel::kDone) return kTRUE;
    }
 
@@ -139,13 +141,13 @@ Bool_t TTaskParallel::HasDependency() {
 }
 
 //_________________________________________________________________________________________________
-void TTaskParallel::SetStatusType(ETaskStatusType t,Bool_t recursivly) {
+void TTaskParallel::SetStatusType(ETaskStatusType t, Bool_t recursivly) {
    fTaskStatusType = t;
    if (recursivly) {
       TIter next(fTasks);
-      TTaskParallel*task;
-      while ((task = (TTaskParallel*)next())) {
-         task->SetStatusType(t,recursivly);
+      TTaskParallel *task;
+      while ((task = (TTaskParallel *)next())) {
+         task->SetStatusType(t, recursivly);
       }
    }
 }
@@ -154,18 +156,18 @@ void TTaskParallel::SetStatusType(ETaskStatusType t,Bool_t recursivly) {
 const char *TTaskParallel::GetStatusTypeName(ETaskStatusType t) {
 
    switch (t) {
-   case kWaiting:
-      return "W";
-   case kAssigned:
-      return "A";
-   case kRunning:
-      return "R";
-   case kDoneServing:
-      return "DS";
-   case kDone:
-      return "D";
-   default:
-      return "";
+      case kWaiting:
+         return "W";
+      case kAssigned:
+         return "A";
+      case kRunning:
+         return "R";
+      case kDoneServing:
+         return "DS";
+      case kDone:
+         return "D";
+      default:
+         return "";
    }
    return "";
 }
@@ -174,14 +176,14 @@ const char *TTaskParallel::GetStatusTypeName(ETaskStatusType t) {
 const char *TTaskParallel::GetTypeName(ETaskType t) {
 
    switch (t) {
-   case kCpu:
-      return "CPU";
-   case kIO:
-      return "IO";
-   case kFake:
-      return "FAKE";
-   default:
-      return "";
+      case kCpu:
+         return "CPU";
+      case kIO:
+         return "IO";
+      case kFake:
+         return "FAKE";
+      default:
+         return "";
    }
    return "";
 }

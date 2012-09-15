@@ -13,7 +13,7 @@ ClassImp(TCutSimple)
 
 //_________________________________________________________________________________________________
 TCutSimple::TCutSimple(const char *name, const char *title) :
-TCutObj(name, title)
+   TCutObj(name, title)
 //
 // Std constructor
 //
@@ -23,11 +23,11 @@ TCutObj(name, title)
 //_________________________________________________________________________________________________
 Bool_t TCutSimple::IsSelected(TObject *obj) {
 
-  TNamed *namedObj = (TNamed*) obj;
-  TString ret = namedObj->GetTitle();
-  
-  if (ret.Contains("1")) return kTRUE;
+   TNamed *namedObj = (TNamed *) obj;
+   TString ret = namedObj->GetTitle();
 
-  return kFALSE;
+   if (ret.Contains("1")) return kTRUE;
+
+   return kFALSE;
 }
 

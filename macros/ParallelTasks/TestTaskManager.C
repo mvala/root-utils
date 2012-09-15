@@ -9,21 +9,21 @@ void TestTaskManager() {
 
    Printf("Starting TaskManager ...");
 
-   TTaskManager *taskMgr = new TTaskManager("TaskMgr","TaskManager");
+   TTaskManager *taskMgr = new TTaskManager("TaskMgr", "TaskManager");
    taskMgr->SetParallel(5);
    TTaskStress::EStressType stressType = TTaskStress::kSleep;
 // stressType = TTaskStress::kCpu;
 
-   TTaskMonitor *taskMon = new TTaskMonitor("mon","Task Monitor");
+   TTaskMonitor *taskMon = new TTaskMonitor("mon", "Task Monitor");
    taskMgr->Add(taskMon);
 
    const Int_t numTasks = 10;
 //   Int_t types[numTasks] = {0,0,1,1,1,1,0,1,0,1};
- Int_t types[numTasks] = {0,0,0,0,0,0,0,0,0,0};
+   Int_t types[numTasks] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-   TTaskStress *task=0;
+   TTaskStress *task = 0;
    for (Int_t i = 0; i < numTasks; i++) {
-      task = new TTaskStress(TString::Format("Task%d",i+1).Data(), TString::Format("%d",i+1).Data());
+      task = new TTaskStress(TString::Format("Task%d", i + 1).Data(), TString::Format("%d", i + 1).Data());
       stressType = (TTaskStress::EStressType)types[i];
       task->SetStressType(stressType);
       taskMgr->Add(task);

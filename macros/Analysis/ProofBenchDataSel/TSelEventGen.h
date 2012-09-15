@@ -46,8 +46,8 @@ private:
    Int_t fNTracksMax;                         //max-avg number of tracks in an event
    Int_t fRegenerate;                         //force generation of cleanup files
 
-   TObject* fTotalGen;                        //events generated on this worker
-   TList* fFilesGenerated;                    //list of files generated
+   TObject *fTotalGen;                        //events generated on this worker
+   TList *fFilesGenerated;                    //list of files generated
 
 protected:
 
@@ -72,9 +72,9 @@ public :
    virtual TList  *GetOutputList() const { return fOutput; }
    virtual void    SlaveTerminate();
    virtual void    Terminate();
-   virtual void    Print(Option_t *option="") const;
+   virtual void    Print(Option_t *option = "") const;
 
-   ClassDef(TSelEventGen,0)     //PROOF selector for event file generation
+   ClassDef(TSelEventGen, 0)    //PROOF selector for event file generation
 };
 
 #endif

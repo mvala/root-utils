@@ -3,7 +3,7 @@
 #include <TStopwatch.h>
 #endif
 
-void MainRun(TString macro="",TString projectDir="") {
+void MainRun(TString macro = "", TString projectDir = "") {
 
    gSystem->Load("libThread.so");
    gSystem->Load("libGui.so");
@@ -15,16 +15,16 @@ void MainRun(TString macro="",TString projectDir="") {
    gSystem->Load("libAnalysis.so");
    gSystem->Load("libEventAnalysis.so");
 
-   gSystem->AddIncludePath(TString::Format("-I%sParallelTasks",projectDir.Data()).Data());
-   gSystem->AddIncludePath(TString::Format("-I%sCutSet",projectDir.Data()).Data());
-   gSystem->AddIncludePath(TString::Format("-I%sPeacUtils",projectDir.Data()).Data());
-   gSystem->AddIncludePath(TString::Format("-I%sAnalysis",projectDir.Data()).Data());
-   gSystem->AddIncludePath(TString::Format("-I%sEventAnalysis",projectDir.Data()).Data());
+   gSystem->AddIncludePath(TString::Format("-I%sParallelTasks", projectDir.Data()).Data());
+   gSystem->AddIncludePath(TString::Format("-I%sCutSet", projectDir.Data()).Data());
+   gSystem->AddIncludePath(TString::Format("-I%sPeacUtils", projectDir.Data()).Data());
+   gSystem->AddIncludePath(TString::Format("-I%sAnalysis", projectDir.Data()).Data());
+   gSystem->AddIncludePath(TString::Format("-I%sEventAnalysis", projectDir.Data()).Data());
 
    TStopwatch timer;
    timer.Start();
 
-   gROOT->ProcessLine(TString::Format(".x %s+",macro.Data()).Data());
+   gROOT->ProcessLine(TString::Format(".x %s+", macro.Data()).Data());
 
    timer.Stop();
    timer.Print();

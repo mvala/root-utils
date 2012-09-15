@@ -3,7 +3,7 @@
 PROJECT_DIR="$(dirname $(dirname $(readlink -m $0)))"
 
 # Build
-$PROJECT_DIR/scripts/make.sh install || exit $?
+#$PROJECT_DIR/scripts/make.sh install || exit $?
 
 export LD_LIBRARY_PATH="$PROJECT_DIR/lib:$LD_LIBRARY_PATH"
 

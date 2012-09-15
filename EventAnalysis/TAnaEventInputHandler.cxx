@@ -16,10 +16,10 @@ ClassImp(TAnaEventInputHandler)
 
 //_________________________________________________________________________________________________
 TAnaEventInputHandler::TAnaEventInputHandler(const char *name, const char *title) :
-TAnalysisTask(name, title),
-fEvent(0),
-fTree(0),
-fEntry(0)
+   TAnalysisTask(name, title),
+   fEvent(0),
+   fTree(0),
+   fEntry(0)
 {
    //
    // Std constructor
@@ -38,8 +38,8 @@ TAnaEventInputHandler::~TAnaEventInputHandler() {
 
 //_________________________________________________________________________________________________
 TAnaEventInputHandler::TAnaEventInputHandler(const TAnaEventInputHandler &obj) :
-                  TAnalysisTask(obj),fEvent(obj.fEvent),fTree(obj.fTree),
-                  fEntry(obj.fEntry)
+   TAnalysisTask(obj), fEvent(obj.fEvent), fTree(obj.fTree),
+   fEntry(obj.fEntry)
 
 {
    //
@@ -76,17 +76,17 @@ void TAnaEventInputHandler::Exec(Option_t *option) {
 }
 
 //_________________________________________________________________________________________________
-Bool_t  TAnaEventInputHandler::BeginEvent(TTree*tree,Long64_t entry) {
+Bool_t  TAnaEventInputHandler::BeginEvent(TTree *tree, Long64_t entry) {
 
 
-   fTree = (TChain*)tree;
+   fTree = (TChain *)tree;
    fEntry = entry;
 
    // let's init event
    if (!fEvent) {
       Event *ev = new Event();
       fEvent = ev;
-      fTree->SetBranchAddress("event",&fEvent);
+      fTree->SetBranchAddress("event", &fEvent);
    }
 
 

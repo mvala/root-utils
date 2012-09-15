@@ -14,8 +14,8 @@ ClassImp(TAnaInputHandler)
 
 //_________________________________________________________________________________________________
 TAnaInputHandler::TAnaInputHandler(const char *name, const char *title) :
-TAnalysisTask(name, title),
-fEvent(0)
+   TAnalysisTask(name, title),
+   fEvent(0)
 {
    //
    // Std constructor
@@ -34,7 +34,7 @@ TAnaInputHandler::~TAnaInputHandler() {
 
 //_________________________________________________________________________________________________
 TAnaInputHandler::TAnaInputHandler(const TAnaInputHandler &obj) :
-      TAnalysisTask(obj),fEvent(obj.fEvent)
+   TAnalysisTask(obj), fEvent(obj.fEvent)
 
 {
    //
@@ -62,15 +62,15 @@ void TAnaInputHandler::Exec(Option_t *option) {
    // Exec of manager task
    //
 
-   Printf("Running Task %s",GetName());
+   Printf("Running Task %s", GetName());
 
 }
 
 //_________________________________________________________________________________________________
-Bool_t  TAnaInputHandler::BeginEvent(TTree*tree,Long64_t entry) {
+Bool_t  TAnaInputHandler::BeginEvent(TTree *tree, Long64_t entry) {
 
    // let's init event
-   Printf("Opening event %lld",entry);
+   Printf("Opening event %lld", entry);
    tree->GetEntry(entry, 0);
    return kTRUE;
 }

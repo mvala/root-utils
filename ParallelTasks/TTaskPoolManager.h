@@ -17,14 +17,14 @@
 class TTaskPoolManager : public TObject {
    RQ_OBJECT("TTaskPoolManager")
 public:
-   TTaskPoolManager(Int_t numThreads=1);
+   TTaskPoolManager(Int_t numThreads = 1);
    virtual ~TTaskPoolManager();
 
    void Init();
    virtual void Print(Option_t *option = "") const;
 
    void PushTask(TTaskParallel *t);
-   void Stop(Bool_t wait=kFALSE);
+   void Stop(Bool_t wait = kFALSE, Bool_t stop = kFALSE);
 
 private:
 

@@ -15,14 +15,14 @@ public:
    void Reset();
    virtual void Print(Option_t *option = "") const;
 
-   void IncrementThread(TTaskParallel::ETaskType type,TTaskParallel::ETaskStatusType status) { fNumberOfThreads[type][status]++;}
-   Int_t GetNumThreads(TTaskParallel::ETaskType type,TTaskParallel::ETaskStatusType status) { return fNumberOfThreads[type][status];}
+   void IncrementThread(TTaskParallel::ETaskType type, TTaskParallel::ETaskStatusType status) { fNumberOfThreads[type][status]++;}
+   Int_t GetNumThreads(TTaskParallel::ETaskType type, TTaskParallel::ETaskStatusType status) { return fNumberOfThreads[type][status];}
 
 private:
 
    Int_t fNumberOfThreads[TTaskParallel::kAllTypes][TTaskParallel::kAllStatusTypes];
 
-   ClassDef(TTaskMonitorMsg,1)
+   ClassDef(TTaskMonitorMsg, 1)
 };
 
 #endif

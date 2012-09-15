@@ -15,7 +15,7 @@
 class TTaskStress : public TTaskParallel {
 
 public:
-   enum EStressType {kSleep=0, kCpu=1, kIO=2 };
+   enum EStressType {kSleep = 0, kCpu = 1, kIO = 2 };
 
    TTaskStress(const char *name = "Task", const char *title = "Task");
    TTaskStress(const TTaskStress &obj);

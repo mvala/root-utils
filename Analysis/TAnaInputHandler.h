@@ -23,7 +23,7 @@ public:
 
    virtual void Exec(Option_t *option);
 
-   virtual Bool_t BeginEvent(TTree*tree,Long64_t entry);
+   virtual Bool_t BeginEvent(TTree *tree, Long64_t entry);
 //   virtual Bool_t ProcessEvent(TTree*tree,Long64_t entry) = 0;
 //   virtual Bool_t TerminateEvent(TTree*tree,Long64_t entry) = 0;
 

@@ -45,14 +45,14 @@ ClassImp(TSelEvent)
 
 //______________________________________________________________________________
 TSelEvent::TSelEvent(TTree *)
-          : fReadType(0), fDebug(kFALSE), fCHist(0), fPtHist(0),
-            fNTracksHist(0), fEventName(0), fTracks(0), fHighPt(0), fMuons(0),
-            fH(0), b_event_fType(0), b_fEventName(0), b_event_fNtrack(0), b_event_fNseg(0),
-            b_event_fNvertex(0), b_event_fFlag(0), b_event_fTemperature(0),
-            b_event_fMeasures(0), b_event_fMatrix(0), b_fClosestDistance(0),
-            b_event_fEvtHdr(0), b_fTracks(0), b_fHighPt(0), b_fMuons(0),
-            b_event_fLastTrack(0), b_event_fWebHistogram(0), b_fH(0),
-            b_event_fTriggerBits(0), b_event_fIsValid(0)
+   : fReadType(0), fDebug(kFALSE), fCHist(0), fPtHist(0),
+     fNTracksHist(0), fEventName(0), fTracks(0), fHighPt(0), fMuons(0),
+     fH(0), b_event_fType(0), b_fEventName(0), b_event_fNtrack(0), b_event_fNseg(0),
+     b_event_fNvertex(0), b_event_fFlag(0), b_event_fTemperature(0),
+     b_event_fMeasures(0), b_event_fMatrix(0), b_fClosestDistance(0),
+     b_event_fEvtHdr(0), b_fTracks(0), b_fHighPt(0), b_fMuons(0),
+     b_event_fLastTrack(0), b_event_fWebHistogram(0), b_fH(0),
+     b_event_fTriggerBits(0), b_event_fIsValid(0)
 {
    // Constructor
 
@@ -60,17 +60,17 @@ TSelEvent::TSelEvent(TTree *)
 
 //______________________________________________________________________________
 TSelEvent::TSelEvent()
-          : fReadType(0), fDebug(kFALSE), fCHist(0), fPtHist(0),
-            fNTracksHist(0), fEventName(0), fTracks(0), fHighPt(0), fMuons(0),
-            fH(0), b_event_fType(0), b_fEventName(0), b_event_fNtrack(0), b_event_fNseg(0),
-            b_event_fNvertex(0), b_event_fFlag(0), b_event_fTemperature(0),
-            b_event_fMeasures(0), b_event_fMatrix(0), b_fClosestDistance(0),
-            b_event_fEvtHdr(0), b_fTracks(0), b_fHighPt(0), b_fMuons(0),
-            b_event_fLastTrack(0), b_event_fWebHistogram(0), b_fH(0),
-            b_event_fTriggerBits(0), b_event_fIsValid(0)
+   : fReadType(0), fDebug(kFALSE), fCHist(0), fPtHist(0),
+     fNTracksHist(0), fEventName(0), fTracks(0), fHighPt(0), fMuons(0),
+     fH(0), b_event_fType(0), b_fEventName(0), b_event_fNtrack(0), b_event_fNseg(0),
+     b_event_fNvertex(0), b_event_fFlag(0), b_event_fTemperature(0),
+     b_event_fMeasures(0), b_event_fMatrix(0), b_fClosestDistance(0),
+     b_event_fEvtHdr(0), b_fTracks(0), b_fHighPt(0), b_fMuons(0),
+     b_event_fLastTrack(0), b_event_fWebHistogram(0), b_fH(0),
+     b_event_fTriggerBits(0), b_event_fIsValid(0)
 {
    // Constructor
-   
+
 }
 
 //______________________________________________________________________________
@@ -84,41 +84,41 @@ void TSelEvent::Begin(TTree *)
 
    //get parameters
 
-   Bool_t found_readtype=kFALSE;
-   Bool_t found_debug=kFALSE;
+   Bool_t found_readtype = kFALSE;
+   Bool_t found_debug = kFALSE;
 
    TIter nxt(fInput);
    TString sinput;
    TObject *obj;
-   while ((obj = nxt())){
-      sinput=obj->GetName();
+   while ((obj = nxt())) {
+      sinput = obj->GetName();
       //Info("Begin", "name=%s", sinput.Data());
-      if (sinput.Contains("PROOF_Benchmark_ReadType")){
+      if (sinput.Contains("PROOF_Benchmark_ReadType")) {
          if ((fReadType = dynamic_cast<TPBReadType *>(obj))) found_readtype = kTRUE;
          continue;
       }
-      if (sinput.Contains("PROOF_BenchmarkDebug")){
-         TParameter<Int_t>* a=dynamic_cast<TParameter<Int_t>*>(obj);
-         if (a){
-            fDebug= a->GetVal();
-            found_debug=kTRUE;
+      if (sinput.Contains("PROOF_BenchmarkDebug")) {
+         TParameter<Int_t> *a = dynamic_cast<TParameter<Int_t>*>(obj);
+         if (a) {
+            fDebug = a->GetVal();
+            found_debug = kTRUE;
             //Info("Begin", "PROOF_BenchmarkDebug=%d", fDebug);
          }
-         else{
-            Error("Begin", "PROOF_BenchmarkDebug not type TParameter<Int_t>*"); 
-         } 
+         else {
+            Error("Begin", "PROOF_BenchmarkDebug not type TParameter<Int_t>*");
+         }
          continue;
       }
    }
 
-   if (!found_readtype){
+   if (!found_readtype) {
       fReadType = new TPBReadType(TPBReadType::kReadOpt);
       Warning("Begin", "PROOF_Benchmark_ReadType not found; using default: %d",
-                       fReadType->GetType());
+              fReadType->GetType());
    }
-   if (!found_debug){
+   if (!found_debug) {
       Warning("Begin", "PROOF_BenchmarkDebug not found; using default: %d",
-                       fDebug);
+              fDebug);
    }
 }
 
@@ -133,51 +133,51 @@ void TSelEvent::SlaveBegin(TTree *tree)
 
    TString option = GetOption();
 
-   Bool_t found_readtype=kFALSE;
-   Bool_t found_debug=kFALSE;
+   Bool_t found_readtype = kFALSE;
+   Bool_t found_debug = kFALSE;
 
    //fInput->Print("A");
    TIter nxt(fInput);
    TString sinput;
    TObject *obj;
-   while ((obj = nxt())){
-      sinput=obj->GetName();
+   while ((obj = nxt())) {
+      sinput = obj->GetName();
       //Info("SlaveBegin", "name=%s", sinput.Data());
-      if (sinput.Contains("PROOF_Benchmark_ReadType")){
+      if (sinput.Contains("PROOF_Benchmark_ReadType")) {
          if ((fReadType = dynamic_cast<TPBReadType *>(obj))) found_readtype = kTRUE;
          continue;
       }
-      if (sinput.Contains("PROOF_BenchmarkDebug")){
-         TParameter<Int_t>* a=dynamic_cast<TParameter<Int_t>*>(obj);
-         if (a){
-            fDebug= a->GetVal();
-            found_debug=kTRUE;
+      if (sinput.Contains("PROOF_BenchmarkDebug")) {
+         TParameter<Int_t> *a = dynamic_cast<TParameter<Int_t>*>(obj);
+         if (a) {
+            fDebug = a->GetVal();
+            found_debug = kTRUE;
             //Info("SlaveBegin", "PROOF_BenchmarkDebug=%d", fDebug);
          }
-         else{
+         else {
             Error("SlaveBegin", "PROOF_BenchmarkDebug not type TParameter"
-                                "<Int_t>*"); 
-         } 
+                  "<Int_t>*");
+         }
          continue;
       }
    }
 
-   if (!found_readtype){
+   if (!found_readtype) {
       fReadType = new TPBReadType(TPBReadType::kReadOpt);
       Warning("SlaveBegin", "PROOF_Benchmark_ReadType not found; using default: %d",
-                       fReadType->GetType());
+              fReadType->GetType());
    }
-   if (!found_debug){
+   if (!found_debug) {
       Warning("SlaveBegin", "PROOF_BenchmarkDebug not found; using default: %d",
-                            fDebug);
+              fDebug);
    }
 
-   fPtHist = new TH1F("pt_dist","p_{T} Distribution", 100, 0, 5);
+   fPtHist = new TH1F("pt_dist", "p_{T} Distribution", 100, 0, 5);
    fPtHist->SetDirectory(0);
    fPtHist->GetXaxis()->SetTitle("p_{T}");
    fPtHist->GetYaxis()->SetTitle("dN/p_{T}dp_{T}");
-   
-   fNTracksHist = new TH1F("ntracks_dist","N_{Tracks} per Event"
+
+   fNTracksHist = new TH1F("ntracks_dist", "N_{Tracks} per Event"
                            " Distribution", 100, 50, 150);
    //enable rebinning
    fNTracksHist->SetBit(TH1::kCanRebin);
@@ -206,31 +206,31 @@ Bool_t TSelEvent::Process(Long64_t entry)
    //  The entry is always the local entry number in the current tree.
    //  Assuming that fChain is the pointer to the TChain being processed,
    //  use fChain->GetTree()->GetEntry(entry).
- 
-   if (fReadType->GetType() != TPBReadType::kReadNotSpecified){
-      switch (fReadType->GetType()){
+
+   if (fReadType->GetType() != TPBReadType::kReadNotSpecified) {
+      switch (fReadType->GetType()) {
          case TPBReadType::kReadFull:
             // Full read
             fChain->GetTree()->GetEntry(entry);
             fNTracksHist->Fill(fNtrack);
-      
-            for(Int_t j=0;j<fTracks->GetEntries();j++){
-               Track* curtrack = dynamic_cast<Track*>(fTracks->At(j));
-               fPtHist->Fill(curtrack->GetPt(),1./curtrack->GetPt());
+
+            for (Int_t j = 0; j < fTracks->GetEntries(); j++) {
+               Track *curtrack = dynamic_cast<Track *>(fTracks->At(j));
+               fPtHist->Fill(curtrack->GetPt(), 1. / curtrack->GetPt());
             }
             fTracks->Clear("C");
             break;
          case TPBReadType::kReadOpt:
             // Partial read
             b_event_fNtrack->GetEntry(entry);
-      
+
             fNTracksHist->Fill(fNtrack);
-         
-            if (fNtrack>0) {
+
+            if (fNtrack > 0) {
                b_fTracks->GetEntry(entry);
-               for(Int_t j=0;j<fTracks->GetEntries();j++){
-                  Track* curtrack = dynamic_cast<Track*>(fTracks->At(j));
-                  fPtHist->Fill(curtrack->GetPt(),1./curtrack->GetPt());
+               for (Int_t j = 0; j < fTracks->GetEntries(); j++) {
+                  Track *curtrack = dynamic_cast<Track *>(fTracks->At(j));
+                  fPtHist->Fill(curtrack->GetPt(), 1. / curtrack->GetPt());
                }
                fTracks->Clear("C");
             }

@@ -42,19 +42,19 @@ private:
    Int_t        fNpoint;       //Number of points for this track
    Short_t      fValid;        //Validity criterion
    Int_t        fNsp;          //Number of points for this track with a special value
-   Double32_t*  fPointValue;   //[fNsp][0,3] a special quantity for some point.
+   Double32_t  *fPointValue;   //[fNsp][0,3] a special quantity for some point.
    TBits        fTriggerBits;  //Bits triggered by this track.
 
 public:
    Track() { fPointValue = 0; }
-   Track(const Track& orig);
+   Track(const Track &orig);
    Track(Float_t random);
    virtual ~Track() {Clear();}
-   void          Clear(Option_t *option="");
+   void          Clear(Option_t *option = "");
    Float_t       GetPx() const { return fPx; }
    Float_t       GetPy() const { return fPy; }
    Float_t       GetPz() const { return fPz; }
-   Float_t       GetPt() const { return TMath::Sqrt(fPx*fPx + fPy*fPy); }
+   Float_t       GetPt() const { return TMath::Sqrt(fPx * fPx + fPy * fPy); }
    Float_t       GetRandom() const { return fRandom; }
    Float_t       GetBx() const { return fBx; }
    Float_t       GetBy() const { return fBy; }
@@ -67,15 +67,15 @@ public:
    Float_t       GetZfirst() const { return fZfirst; }
    Float_t       GetZlast()  const { return fZlast; }
    Double32_t    GetCharge() const { return fCharge; }
-   Double32_t    GetVertex(Int_t i=0) {return (i<3)?fVertex[i]:0;}
+   Double32_t    GetVertex(Int_t i = 0) {return (i < 3) ? fVertex[i] : 0;}
    Int_t         GetNpoint() const { return fNpoint; }
-   TBits&        GetTriggerBits() { return fTriggerBits; }
+   TBits        &GetTriggerBits() { return fTriggerBits; }
    Short_t       GetValid()  const { return fValid; }
-   virtual void  SetValid(Int_t valid=1) { fValid = valid; }
+   virtual void  SetValid(Int_t valid = 1) { fValid = valid; }
    Int_t         GetN() const { return fNsp; }
-   Double32_t    GetPointValue(Int_t i=0) const { return (i<fNsp)?fPointValue[i]:0; }
+   Double32_t    GetPointValue(Int_t i = 0) const { return (i < fNsp) ? fPointValue[i] : 0; }
 
-   ClassDef(Track,2)  //A track segment
+   ClassDef(Track, 2) //A track segment
 };
 
 class EventHeader {
@@ -93,7 +93,7 @@ public:
    Int_t  GetRun() const { return fRun; }
    Int_t  GetDate() const { return fDate; }
 
-   ClassDef(EventHeader,1)  //Event Header
+   ClassDef(EventHeader, 1) //Event Header
 };
 
 
@@ -106,7 +106,7 @@ private:
    Int_t          fNseg;              //Number of track segments
    Int_t          fNvertex;
    UInt_t         fFlag;
-   Double32_t     fTemperature;       
+   Double32_t     fTemperature;
    Int_t          fMeasures[10];
    Double32_t     fMatrix[4][4];
    Double32_t    *fClosestDistance;   //[fNvertex][0,0,6]
@@ -126,21 +126,21 @@ private:
 public:
    Event();
    virtual ~Event();
-   void          Build(Int_t ev, Int_t arg5=600, Float_t ptmin=1);
-   void          Clear(Option_t *option ="");
+   void          Build(Int_t ev, Int_t arg5 = 600, Float_t ptmin = 1);
+   void          Clear(Option_t *option = "");
    Bool_t        IsValid() const { return fIsValid; }
-   static void   Reset(Option_t *option ="");
-   void          ResetHistogramPointer() {fH=0;}
+   static void   Reset(Option_t *option = "");
+   void          ResetHistogramPointer() {fH = 0;}
    void          SetNseg(Int_t n) { fNseg = n; }
    void          SetNtrack(Int_t n) { fNtrack = n; }
    void          SetNvertex(Int_t n) { fNvertex = n; SetRandomVertex(); }
    void          SetFlag(UInt_t f) { fFlag = f; }
    void          SetTemperature(Double32_t t) { fTemperature = t; }
-   void          SetType(char *type) {strcpy(fType,type);}
+   void          SetType(char *type) {strcpy(fType, type);}
    void          SetHeader(Int_t i, Int_t run, Int_t date, Float_t random);
-   Track        *AddTrack(Float_t random, Float_t ptmin=1);
+   Track        *AddTrack(Float_t random, Float_t ptmin = 1);
    void          SetMeasure(UChar_t which, Int_t what);
-   void          SetMatrix(UChar_t x, UChar_t y, Double32_t what) { if (x<3&&y<3) fMatrix[x][y]=what;}
+   void          SetMatrix(UChar_t x, UChar_t y, Double32_t what) { if (x < 3 && y < 3) fMatrix[x][y] = what;}
    void          SetRandomVertex();
 
    Float_t       GetClosestDistance(Int_t i) {return fClosestDistance[i];}
@@ -154,14 +154,14 @@ public:
    TClonesArray *GetTracks() const {return fTracks;}
    TRefArray    *GetHighPt() const {return fHighPt;}
    TRefArray    *GetMuons()  const {return fMuons;}
-   Track        *GetLastTrack() const {return (Track*)fLastTrack.GetObject();}
+   Track        *GetLastTrack() const {return (Track *)fLastTrack.GetObject();}
    TH1F         *GetHistogram() const {return fH;}
-   TH1          *GetWebHistogram()  const {return (TH1*)fWebHistogram.GetObject();}
-   Int_t         GetMeasure(UChar_t which) { return (which<10)?fMeasures[which]:0; }
-   Double32_t    GetMatrix(UChar_t x, UChar_t y) { return (x<4&&y<4)?fMatrix[x][y]:0; }
-   TBits&        GetTriggerBits() { return fTriggerBits; }
+   TH1          *GetWebHistogram()  const {return (TH1 *)fWebHistogram.GetObject();}
+   Int_t         GetMeasure(UChar_t which) { return (which < 10) ? fMeasures[which] : 0; }
+   Double32_t    GetMatrix(UChar_t x, UChar_t y) { return (x < 4 && y < 4) ? fMatrix[x][y] : 0; }
+   TBits        &GetTriggerBits() { return fTriggerBits; }
 
-   ClassDef(Event,1)  //Event structure
+   ClassDef(Event, 1) //Event structure
 };
 
 
@@ -195,7 +195,7 @@ public:
 
    void Hfill(Event *event);
 
-   ClassDef(HistogramManager,1)  //Manages all histograms
+   ClassDef(HistogramManager, 1) //Manages all histograms
 };
 
 #endif

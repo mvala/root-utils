@@ -10,7 +10,7 @@ class TAnalysisSelector : public TSelector {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
 
-   TAnalysisSelector(TTree *tree =0);
+   TAnalysisSelector(TTree *tree = 0);
    virtual ~TAnalysisSelector() { }
    virtual Int_t   Version() const { return 2; }
    virtual void    Begin(TTree */*tree*/) {;}
@@ -24,7 +24,7 @@ public :
 private:
    TAnalysisManager *fAnalysisManager; //! Analysis manager
 
-   ClassDef(TAnalysisSelector,1);
+   ClassDef(TAnalysisSelector, 1);
 };
 
 #endif

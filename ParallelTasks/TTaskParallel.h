@@ -18,8 +18,8 @@
 class TTaskParallel : public TTask {
 
 public:
-   enum ETaskStatusType {kWaiting=0, kAssigned=1,kRunning=2, kDoneServing=3, kDone=4, kAllStatusTypes };
-   enum ETaskType {kCpu=0, kIO=1, kFake=2, kAllTypes };
+   enum ETaskStatusType {kWaiting = 0, kAssigned = 1, kRunning = 2, kDoneServing = 3, kDone = 4, kAllStatusTypes };
+   enum ETaskType {kCpu = 0, kIO = 1, kFake = 2, kAllTypes };
    TTaskParallel(const char *name = "Task", const char *title = "Task");
    TTaskParallel(const TTaskParallel &obj);
    TTaskParallel &operator=(const TTaskParallel &obj);
@@ -34,7 +34,7 @@ public:
    TTask *GetParent() { return fParent;}
    void SetParent(TTask *task) { fParent = task; }
 
-   void SetStatusType(ETaskStatusType t,Bool_t recursivly=kFALSE);
+   void SetStatusType(ETaskStatusType t, Bool_t recursivly = kFALSE);
    void SetType(ETaskType t) { fTaskType = t;}
 
    const char *GetStatusTypeName(ETaskStatusType t);
@@ -45,19 +45,16 @@ public:
    const char *GetTypeName() { return GetTypeName(fTaskType);}
    ETaskType GetType() { return fTaskType; }
 
-   void RunTask(Option_t *option,TTaskParallel::ETaskType type=TTaskParallel::kCpu);
+   void RunTask(Option_t *option, TTaskParallel::ETaskType type = TTaskParallel::kCpu);
 
    Bool_t HasDependency();
 
-
 protected:
 
-   ETaskStatusType fTaskStatusType;
-   ETaskType fTaskType;
-
-   TTask *fParent;
-
-   TList     *fListDeps;                // dependency list
+   ETaskStatusType        fTaskStatusType;// Status tyoe
+   ETaskType              fTaskType;      // task type
+   TTask                 *fParent;        // partent taks
+   TList                 *fListDeps;      // dependency list
 
    ClassDef(TTaskParallel, 1)
 

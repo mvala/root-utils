@@ -18,7 +18,7 @@ public:
    TCutObj(const char *name = "cut", const char *title = "Cut Title");
    virtual ~TCutObj();
 
-   virtual Bool_t IsSelected(TObject*obj) { return kTRUE; }
+   virtual Bool_t IsSelected(TObject *obj) { return kTRUE; }
 private:
    ClassDef(TCutObj, 1)
 };

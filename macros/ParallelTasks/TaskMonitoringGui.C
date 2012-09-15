@@ -5,5 +5,5 @@
 #include <TTaskMonitorGui.h>
 #endif
 void TaskMonitoringGui() {
-    new TTaskMonitorGui(gClient->GetRoot(),600,400);
+   new TTaskMonitorGui(gClient->GetRoot(), 600, 400);
 }

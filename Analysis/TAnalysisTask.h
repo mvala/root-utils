@@ -23,9 +23,9 @@ public:
 
 //   virtual void Exec(Option_t *option);
 
-   virtual Bool_t BeginEvent(TTree*/*tree*/,Long64_t /*entry*/) { return kTRUE; }
-   virtual Bool_t ProcessEvent(TTree*/*tree*/,Long64_t /*entry*/) { return kTRUE; }
-   virtual Bool_t TerminateEvent(TTree*/*tree*/,Long64_t /*entry*/) { return kTRUE; }
+   virtual Bool_t BeginEvent(TTree */*tree*/, Long64_t /*entry*/) { return kTRUE; }
+   virtual Bool_t ProcessEvent(TTree */*tree*/, Long64_t /*entry*/) { return kTRUE; }
+   virtual Bool_t TerminateEvent(TTree */*tree*/, Long64_t /*entry*/) { return kTRUE; }
 
    ClassDef(TAnalysisTask, 1)
 };

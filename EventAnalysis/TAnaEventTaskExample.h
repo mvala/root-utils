@@ -27,7 +27,7 @@ public:
 //   virtual Bool_t ProcessEvent(TTree*tree,Long64_t entry) = 0;
 //   virtual Bool_t TerminateEvent(TTree*tree,Long64_t entry) = 0;
 
-   void SetNLoops(Int_t n) { n>0 ? fNLoops = n : fNLoops=1; }
+   void SetNLoops(Int_t n) { n > 0 ? fNLoops = n : fNLoops = 1; }
 
 private:
 

@@ -5,8 +5,8 @@
 ClassImp(TAnalysisSelector)
 
 TAnalysisSelector::TAnalysisSelector(TTree * /*tree*/) : TSelector(),
-fChain(0),
-fAnalysisManager(0)
+   fChain(0),
+   fAnalysisManager(0)
 {
 
 }
@@ -21,15 +21,15 @@ void TAnalysisSelector::SlaveBegin(TTree * /*tree*/)
 {
    TString option = GetOption();
 
-   fAnalysisManager = (TAnalysisManager*) fInput->FindObject("AM");
+   fAnalysisManager = (TAnalysisManager *) fInput->FindObject("AM");
    if (fAnalysisManager) fAnalysisManager->Print();
 }
 
 Bool_t TAnalysisSelector::Process(Long64_t entry)
 {
 
-//   GetEntry(entry);
-   fAnalysisManager->Process(fChain,entry);
+   if (fAnalysisManager) fAnalysisManager->Process(fChain, entry);
+   else GetEntry(entry);
    return kTRUE;
 }
 
