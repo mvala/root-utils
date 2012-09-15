@@ -47,7 +47,7 @@ TTaskMonitorServ::~TTaskMonitorServ() {
 }
 
 //_________________________________________________________________________________________________
-void TTaskMonitorServ::Exec(Option_t *option) {
+void TTaskMonitorServ::Exec(Option_t */*option*/) {
 
    TTaskManager *tm = TTaskManager::GetTaskManager();
    if (tm) {
@@ -132,7 +132,7 @@ void TTaskMonitorServ::StopMonitoring()
 }
 
 //_________________________________________________________________________________________________
-void TTaskMonitorServ::SendMonitoringMsg(Int_t val, Int_t val2)
+void TTaskMonitorServ::SendMonitoringMsg(Int_t /*val*/, Int_t /*val2*/)
 {
 
 

@@ -28,7 +28,7 @@ void TTaskMonitorMsg::Print(Option_t */*opt*/) const {
       for (j = 0; j < TTaskParallel::kAllStatusTypes; j++) {
          printf(" %d", fNumberOfThreads[i][j]);
       }
-      Printf("");
+      Printf(" ");
    }
 }
 

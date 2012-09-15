@@ -57,7 +57,7 @@ TAnaEventTaskExample &TAnaEventTaskExample::operator=(const TAnaEventTaskExample
 }
 
 //_________________________________________________________________________________________________
-void TAnaEventTaskExample::Exec(Option_t *option) {
+void TAnaEventTaskExample::Exec(Option_t */*option*/) {
    //
    // Exec of manager task
    //

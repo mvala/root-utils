@@ -42,7 +42,7 @@ void TPeacVerifierSel::SlaveBegin(TTree * /*tree*/)
 
 }
 
-Bool_t TPeacVerifierSel::Process(Long64_t entry)
+Bool_t TPeacVerifierSel::Process(Long64_t /*entry*/)
 {
    if (!fFcIn) return kFALSE;
 

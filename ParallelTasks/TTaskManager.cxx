@@ -79,7 +79,7 @@ void TTaskManager::Exec(Option_t *option) {
    }
 
    // Loops until not all tasks are assigned
-   Int_t counter = 0;
+//   Int_t counter = 0;
    while (1) {
       TLockGuard lock(&fMutex);
 //      Printf("Manager loop %d", counter++);

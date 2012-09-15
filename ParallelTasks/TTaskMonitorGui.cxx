@@ -135,7 +135,7 @@ void TTaskMonitorGui::ConnectDisconnect() {
       if (fHost.IsNull()) {
          // input box
          char ret[64];
-         TGInputDialog *id = new TGInputDialog(gClient->GetRoot(), this, "Enter hostname", "localhost", ret);
+         TGInputDialog id(gClient->GetRoot(), this, "Enter hostname", "localhost", ret);
          fHost = ret;
       }
 
@@ -231,10 +231,9 @@ void TTaskMonitorGui::DrawMonitorWindow() {
 //_________________________________________________________________________________________________
 void TTaskMonitorGui::WaitFormInfoMessage() {
    TSocket *socket;
-   TMessage *msgCur;
+//   TMessage *msgCur;
    while (1) {
       socket = fSocketMonitor->Select();
-      HandleMessage("");
-
+      if (socket) HandleMessage("");
    }
 }

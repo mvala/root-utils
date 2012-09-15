@@ -25,7 +25,7 @@ bool TTaskThread::runTask(TTask *task) {
       msg->IncrementThread(t->GetType(), TTaskParallel::kRunning);
    }
    // executing task
-   t->Exec(TString::Format("%lld", fThreadID).Data());
+   t->Exec(TString::Format("%ld", fThreadID).Data());
 
    {
       TLockGuard lock(&fMutex);

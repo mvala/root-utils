@@ -64,7 +64,7 @@ TAnaEventInputHandler &TAnaEventInputHandler::operator=(const TAnaEventInputHand
 }
 
 //_________________________________________________________________________________________________
-void TAnaEventInputHandler::Exec(Option_t *option) {
+void TAnaEventInputHandler::Exec(Option_t */*option*/) {
    //
    // Exec of manager task
    //

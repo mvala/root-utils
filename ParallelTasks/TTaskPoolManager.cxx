@@ -40,7 +40,7 @@ void TTaskPoolManager::Init() {
 }
 
 //_________________________________________________________________________________________________
-void TTaskPoolManager::Print(Option_t *option) const {
+void TTaskPoolManager::Print(Option_t */*option*/) const {
 
    Printf("NumberOfThreads = %d", fNumThreads);
 }

@@ -55,6 +55,6 @@ void TAnaTaskExample::Exec(Option_t *option) {
    // Exec of manager task
    //
 
-   Printf("Running Task %s", GetName());
+   Printf("Running Task %s opt=%s", GetName(),option);
 
 }

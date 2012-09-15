@@ -1,6 +1,10 @@
 project(ParallelTasks)
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
+
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(Threads REQUIRED)
 find_package(ROOT REQUIRED)

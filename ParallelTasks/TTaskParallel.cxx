@@ -103,7 +103,7 @@ void TTaskParallel::Exec(Option_t *option) {
 }
 
 //_________________________________________________________________________________________________
-void TTaskParallel::RunTask(Option_t *option, TTaskParallel::ETaskType type) {
+void TTaskParallel::RunTask(Option_t *option, TTaskParallel::ETaskType /*type*/) {
 
 
    if (!fTasks) return;

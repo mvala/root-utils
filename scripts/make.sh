@@ -11,7 +11,7 @@ fi
 cd $PROJECT_DIR/build
 
 if [ ! -f Makefile ];then
-  cmake -DCMAKE_INSTALL_PREFIX="$PROJECT_DIR" ../
+  cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="$PROJECT_DIR" ../
 fi
 
 CMD="nice -n 15"
