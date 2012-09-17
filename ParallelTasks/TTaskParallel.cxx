@@ -18,11 +18,12 @@ ClassImp(TTaskParallel)
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const char *name, const char *title) :
-   TTask(name, title),
-   fTaskStatusType(kWaiting),
-   fTaskType(kCpu),
-   fParent(0),
-   fListDeps(0)
+TTask(name, title),
+fTaskStatusType(kWaiting),
+fTaskType(kCpu),
+fParent(0),
+fListDeps(0),
+fMutex()
 {
    // Std constructor
 
@@ -37,11 +38,11 @@ TTaskParallel::~TTaskParallel() {
 
 //_________________________________________________________________________________________________
 TTaskParallel::TTaskParallel(const TTaskParallel &obj) :
-   TTask(obj),
-   fTaskStatusType(obj.fTaskStatusType),
-   fTaskType(obj.fTaskType),
-   fParent(obj.fParent),
-   fListDeps(obj.fListDeps)
+         TTask(obj),
+         fTaskStatusType(obj.fTaskStatusType),
+         fTaskType(obj.fTaskType),
+         fParent(obj.fParent),
+         fListDeps(obj.fListDeps)
 
 {
    //
@@ -109,24 +110,31 @@ void TTaskParallel::RunTask(Option_t *option, TTaskParallel::ETaskType /*type*/)
    if (!fTasks) return;
 
    TIter next(fTasks);
-   TTask *task;
+//   TTask *task;
    TTaskParallel *t;
    TTaskManager *taskMgr = TTaskManager::GetTaskManager();
-   while ((task = (TTask *) next())) {
-      if (!task->IsActive()) continue;
-      t = (TTaskParallel *) task;
-//      Printf("Testing %s [%s] %p", t->GetName(), t->GetStatusTypeName(), t->GetParent());
+   while ((t = (TTaskParallel *) next())) {
+      if (!t->IsActive()) continue;
+//      t = (TTaskParallel *) task;
+      //      Printf("Testing %s [%s] %p", t->GetName(), t->GetStatusTypeName(), t->GetParent());
       if (t->GetStatusType() == TTaskParallel::kWaiting) {
          if (t->HasDependency()) {
             // task was not assigned
-            taskMgr->SetAllAssigned(kFALSE);
+            {
+//               TLockGuard lock(taskMgr->GetMutex());
+               taskMgr->SetAllAssigned(kFALSE);
+            }
          } else {
-            t->SetStatusType(TTaskParallel::kAssigned);
-//            Printf("Pushing task %s [%s]", t->GetName(), t->GetStatusTypeName());
+            {
+//               TLockGuard lock2(taskMgr->GetMutex());
+//               TLockGuard lock(t->GetMutex());
+               t->SetStatusType(TTaskParallel::kAssigned);
+            }
+            //            Printf("Pushing task %s [%s]", t->GetName(), t->GetStatusTypeName());
             taskMgr->PushTask(t);
          }
       }
-//      gSystem->Sleep(100);
+      //      gSystem->Sleep(100);
       t->RunTask(option);
    }
 
@@ -145,11 +153,15 @@ Bool_t TTaskParallel::HasDependency() {
 
 //_________________________________________________________________________________________________
 void TTaskParallel::SetStatusType(ETaskStatusType t, Bool_t recursivly) {
+
+//   TLockGuard lock2(GetMutex());
+
    fTaskStatusType = t;
    if (recursivly) {
       TIter next(fTasks);
       TTaskParallel *task;
       while ((task = (TTaskParallel *)next())) {
+//         TLockGuard lock(task->GetMutex());
          task->SetStatusType(t, recursivly);
       }
    }
@@ -159,18 +171,18 @@ void TTaskParallel::SetStatusType(ETaskStatusType t, Bool_t recursivly) {
 const char *TTaskParallel::GetStatusTypeName(ETaskStatusType t) {
 
    switch (t) {
-      case kWaiting:
-         return "W";
-      case kAssigned:
-         return "A";
-      case kRunning:
-         return "R";
-      case kDoneServing:
-         return "DS";
-      case kDone:
-         return "D";
-      default:
-         return "";
+   case kWaiting:
+      return "W";
+   case kAssigned:
+      return "A";
+   case kRunning:
+      return "R";
+   case kDoneServing:
+      return "DS";
+   case kDone:
+      return "D";
+   default:
+      return "";
    }
    return "";
 }
@@ -179,14 +191,14 @@ const char *TTaskParallel::GetStatusTypeName(ETaskStatusType t) {
 const char *TTaskParallel::GetTypeName(ETaskType t) {
 
    switch (t) {
-      case kCpu:
-         return "CPU";
-      case kIO:
-         return "IO";
-      case kFake:
-         return "FAKE";
-      default:
-         return "";
+   case kCpu:
+      return "CPU";
+   case kIO:
+      return "IO";
+   case kFake:
+      return "FAKE";
+   default:
+      return "";
    }
    return "";
 }

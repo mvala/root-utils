@@ -18,20 +18,21 @@ void TestTaskManagerSimple() {
    taskMgr->SetParallel(10, TTaskParallel::kFake);
 
    Bool_t useDeps = kFALSE;
-   useDeps = kTRUE;
+//   useDeps = kTRUE;
 
    // using monitoring
    //   taskMgr->UseMonitoring();
 
    TTaskStress *task1, *task2;
    TTaskStress::EStressType stressType = TTaskStress::kSleep;
+//   stressType = TTaskStress::kCpu;
 
    TTaskStress::EStressType stressType2 = TTaskStress::kSleep;
    //   stressType2 = TTaskStress::kCpu;
 
-   Int_t nTasks = 10;
+   Int_t nTasks = 4;
    Int_t nSubTasks = 3;
-   Int_t depTaskEvery = 4;
+   Int_t depTaskEvery = 5;
    for (Int_t i = 1; i <= nTasks; i++) {
       task1 = new TTaskStress(TString::Format("task%02d", i * 10).Data(), TString::Format("%d", i + 10).Data());
       task1->SetStressType(stressType);
@@ -50,64 +51,10 @@ void TestTaskManagerSimple() {
       taskMgr->Add(task1);
    }
 
-   //
-   //
-   //   task1 = new TTaskStress("task200", "2");
-   //   task1->SetStressType(stressType);
-   //   taskMgr->Add(task1);
-   //
-   //   task1 = new TTaskStress("task300", "3");
-   //   task1->SetStressType(stressType);
-   //
-   //   task2 = new TTaskStress("task310", "4");
-   //   task2->SetStressType(stressType);
-   //   if (useDeps) task2->AddDependency(task1);
-   //   task1->Add(task2);
-   //
-   //   task2 = new TTaskStress("task320", "5");
-   //   task2->SetStressType(stressType);
-   //   if (useDeps) task2->AddDependency(task1);
-   //   task1->Add(task2);
-   //
-   //   task2 = new TTaskStress("task330", "6");
-   //   task2->SetStressType(stressType);
-   //   if (useDeps) task2->AddDependency(task1);
-   //   task1->Add(task2);
-   //
-   //   taskMgr->Add(task1);
-   //
-   //   task1= new TTaskStress("task400", "10");
-   //   task1->SetStressType(stressType);
-   //
-   //   task2 = new TTaskStress("task410", "11");
-   //   task2->SetStressType(stressType2);
-   //   task2->SetType(TTaskParallel::kIO);
-   //   if (useDeps) task2->AddDependency(task1);
-   //   task1->Add(task2);
-   //
-   //   task2 = new TTaskStress("task420", "12");
-   //   task2->SetStressType(stressType2);
-   //   task2->SetType(TTaskParallel::kIO);
-   //   if (useDeps) task2->AddDependency(task1);
-   //   task1->Add(task2);
-   //
-   //   task2 = new TTaskStress("task430", "13");
-   //   task2->SetStressType(stressType2);
-   //   task2->SetType(TTaskParallel::kIO);
-   //   if (useDeps) task2->AddDependency(task1);
-   //   task1->Add(task2);
-   //
-   //   taskMgr->Add(task1);
-   //
-   //   task1 = new TTaskStress("task500", "9");
-   //   task1->SetStressType(stressType);
-   //   taskMgr->Add(task1);
-   //
-   //
-
-   Int_t nExec = 10000;
+   Int_t nExec = 1e5;
+   Int_t refresh = 100;
    for (Int_t iExec = 0; iExec < nExec; iExec++) {
-      if (iExec%100==0) Printf("Exec %d",iExec);
+      if (iExec%refresh==0) Printf("Exec %d",iExec);
       taskMgr->Exec("");
 //      taskMgr->RestoreManager();
 

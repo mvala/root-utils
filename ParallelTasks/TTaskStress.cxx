@@ -63,6 +63,10 @@ void TTaskStress::Exec(Option_t *option) {
    // Exec of manager task
    //
 
+//   Printf("Running task %s",GetName());
+//   gSystem->Sleep(1);
+   return;
+
    TStopwatch timer;
    timer.Start();
 
@@ -83,12 +87,15 @@ void TTaskStress::Exec(Option_t *option) {
 
    if (fType == kSleep) {
 //      TThread::Lock();
-      UInt_t time = (UInt_t) r.Gaus(5000, 1000);
-      time = 1;
+
+      Int_t multi=1000;
+      multi = 10;
+      UInt_t time = (UInt_t) r.Gaus(5*multi, 1*multi);
+//      time = 1;
 //      TThread::UnLock();
-//      Printf("[%s]%s%s S (%ld)", option, prefix.Data(), GetName(), time);
+//      Printf("[%s]%s%s S (%lld)", option, prefix.Data(), GetName(), time);
       gSystem->Sleep(time);
-//      Printf("[%s]%s%s D (%ld)", option, prefix.Data(), GetName(), time);
+//      Printf("[%s]%s%s D (%lld)", option, prefix.Data(), GetName(), time);
    } else if (fType == kCpu) {
       TH1D h(TString::Format("myTaskStress_%s", GetName()).Data(), "My Stress task hist", 100, -10, 10);
       h.SetDirectory(0);

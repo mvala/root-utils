@@ -48,13 +48,16 @@ public:
    void RunTask(Option_t *option, TTaskParallel::ETaskType type = TTaskParallel::kCpu);
 
    Bool_t HasDependency();
+   TMutex *GetMutex() { return &fMutex;}
+
 
 protected:
 
-   ETaskStatusType        fTaskStatusType;// Status tyoe
-   ETaskType              fTaskType;      // task type
-   TTask                 *fParent;        // partent taks
-   TList                 *fListDeps;      // dependency list
+   ETaskStatusType      fTaskStatusType;     // Status tyoe
+   ETaskType            fTaskType;           // task type
+   TTask               *fParent;             // partent taks
+   TList               *fListDeps;           // dependency list
+   TMutex               fMutex;              // mutex for manager
 
    ClassDef(TTaskParallel, 1)
 

@@ -44,7 +44,6 @@ public:
 private:
 
    static TTaskManager *fgTaskManager;              // global manager
-   TMutex               fMutex;                     // mutex for manager
    TObjArray           *fTaskThreadPools;           // list of thread pools
    Int_t                fNumOfThreads[kAllTypes];   // number of threads reserved for different type
    Bool_t               fIsAllAssigned;             // flag if all tasks are done
